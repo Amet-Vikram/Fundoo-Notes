@@ -65,6 +65,7 @@ class Login : Fragment(R.layout.fragment_login) {
                 if(it.isSuccessful){
                     Toast.makeText(this.context, "Login Successful!", Toast.LENGTH_LONG).show()
                     startActivity(intentNoteHome)
+                    requireActivity().finish()
                 }else{
                     Toast.makeText(this.context, "Login error" + it.exception.toString(), Toast.LENGTH_LONG).show()
                 }

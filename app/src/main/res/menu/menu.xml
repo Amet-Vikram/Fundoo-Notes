@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:shownIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:title="Notes"
+            android:id="@+id/notes"
+            android:icon="@drawable/ic_note"/>
+
+        <item
+            android:title="Reminder"
+            android:id="@+id/reminder"
+            android:icon="@drawable/ic_reminder"/>
+
+        <item
+            android:title="Archive"
+            android:id="@+id/archive"
+            android:icon="@drawable/ic_archive"/>
+
+        <item
+            android:title="Trash"
+            android:id="@+id/trash"
+            android:icon="@drawable/ic_trash"/>
+    </group>
+
+
+</menu>

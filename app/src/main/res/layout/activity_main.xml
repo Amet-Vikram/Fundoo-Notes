@@ -14,7 +14,11 @@
         android:layout_height="match_parent"
         android:gravity="start"
         android:padding="10dp"
+        android:animateLayoutChanges="true"
+        android:showDividers="middle"
+        android:divider="@drawable/empty_divider"
         android:orientation="vertical">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -24,18 +28,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:elevation="5dp"/>
+            android:elevation="5dp" />
 
         <FrameLayout
             android:id="@+id/flFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"/>
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/outerFlFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
 
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"

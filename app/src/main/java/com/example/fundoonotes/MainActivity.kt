@@ -12,16 +12,18 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener{
     private lateinit var auth: FirebaseAuth
     private lateinit var btnLogout : Button
     private lateinit var toolbar : Toolbar
     private lateinit var drawer : DrawerLayout
     private var backPressedTime : Long = 0
+    private lateinit var navigationView: NavigationView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +33,13 @@ class MainActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar)
         auth = Firebase.auth
         drawer = findViewById(R.id.drawer_layout)
+        navigationView = findViewById(R.id.nav_view)
+
+        //Show Note Fragment as default
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.flFragment, Notes())
+            commit()
+        }
 
         //Toolbar Updates
         setSupportActionBar(toolbar)
@@ -39,6 +48,44 @@ class MainActivity : AppCompatActivity() {
         drawer.addDrawerListener(toggle)
         toggle.syncState()
 
+        //Fragment Navigation
+        navigationView.setNavigationItemSelectedListener(this)
+
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.notes -> {
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.flFragment, Notes())
+                    addToBackStack(null)
+                    commit()
+                }
+            }
+            R.id.reminder -> {
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.flFragment, Reminder())
+                    addToBackStack(null)
+                    commit()
+                }
+            }
+            R.id.archive -> {
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.flFragment, Archive())
+                    addToBackStack(null)
+                    commit()
+                }
+            }
+            R.id.trash -> {
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.flFragment, Trash())
+                    addToBackStack(null)
+                    commit()
+                }
+            }
+        }
+        drawer.closeDrawer(GravityCompat.START)
+        return true
     }
 
     override fun onBackPressed(){
@@ -74,7 +121,7 @@ class MainActivity : AppCompatActivity() {
             R.id.profile -> {
                 //Open Profile Fragment
                 supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.outerFlFragment, Profile())
+                    replace(R.id.flFragment, Profile())
                     addToBackStack(null)
                     commit()
                 }
@@ -85,4 +132,6 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 }

@@ -19,9 +19,13 @@
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/activity_note_home.xml" value="0.25" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/activity_user_login.xml" value="0.33" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/fragment_login.xml" value="0.25" />
+        <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/fragment_register.xml" value="0.5" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/nav_header.xml" value="0.33" />
+        <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/profile_fragment.xml" value="0.12552083333333333" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/menu/menu.xml" value="0.27291666666666664" />
+        <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/menu/menu_main.xml" value="0.27291666666666664" />
+        <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/menu/menu_nav_drawer.xml" value="0.27291666666666664" />
       </map>
     </option>
   </component>

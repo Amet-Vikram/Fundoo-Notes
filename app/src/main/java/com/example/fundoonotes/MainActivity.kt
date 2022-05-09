@@ -28,18 +28,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val intentUserLogin = Intent(this, Authenticate::class.java )
         toolbar = findViewById(R.id.toolbar)
         auth = Firebase.auth
         drawer = findViewById(R.id.drawer_layout)
 
-        //TODO Implement Logout functionality
-//        btnLogout = findViewById(R.id.btnLogout)
-//
-//        btnLogout.setOnClickListener{
-//            auth.signOut()
-//            startActivity(intentUserLogin)
-//        }
         //Toolbar Updates
         setSupportActionBar(toolbar)
 
@@ -72,12 +64,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.menu, menu)
-//        return true
-//    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        var id = item.itemId
-//    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.profile -> {
+                //Open Profile Fragment
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.outerFlFragment, Profile())
+                    addToBackStack(null)
+                    commit()
+                }
+            }
+            R.id.search_button -> {
+                Toast.makeText(this, "Searching...", Toast.LENGTH_SHORT).show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

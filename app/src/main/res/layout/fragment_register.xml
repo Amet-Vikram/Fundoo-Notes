@@ -4,86 +4,112 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Register">
+    tools:context=".Register"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="75dp"
+    android:padding="16dp">
+
+
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="34dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/back"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="216dp"
-        android:layout_height="88dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="195dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
         android:fontFamily="@font/bold"
-        android:gravity="start"
+        android:gravity="center"
         android:text="Register"
         android:textColor="@color/teal"
         android:textSize="45sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/etRegFName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.278"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.216" />
+        app:layout_constraintTop_toBottomOf="@+id/btnBack" />
 
     <EditText
         android:id="@+id/etRegEmail"
         android:layout_width="300dp"
         android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="56dp"
         android:background="@drawable/textfield"
         android:ems="10"
         android:hint="Enter Email"
         android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/etRegPassword"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.006" />
+        app:layout_constraintTop_toBottomOf="@+id/etRegLName" />
 
     <EditText
         android:id="@+id/etRegPassword"
         android:layout_width="300dp"
         android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="56dp"
         android:background="@drawable/textfield"
         android:ems="10"
         android:hint="Enter Password"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnRegister"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etRegEmail"
-        app:layout_constraintVertical_bias="0.013" />
+        app:layout_constraintTop_toBottomOf="@+id/etRegEmail" />
 
     <Button
         android:id="@+id/btnRegister"
         android:layout_width="162dp"
         android:layout_height="53dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
         android:background="@drawable/button"
         android:text="Register"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.215"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etRegPassword"
-        app:layout_constraintVertical_bias="0.043" />
+        app:layout_constraintTop_toBottomOf="@+id/etRegPassword" />
 
-    <ImageView
-        android:id="@+id/btnBack"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:contentDescription="back button"
-        android:src="@drawable/back"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+    <EditText
+        android:id="@+id/etRegLName"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="56dp"
+        android:background="@drawable/textfield"
+        android:ems="10"
+        android:hint="Enter Last Name"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/etRegEmail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.078"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.264" />
+        app:layout_constraintTop_toBottomOf="@+id/etRegFName" />
+
+    <EditText
+        android:id="@+id/etRegFName"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="56dp"
+        android:background="@drawable/textfield"
+        android:ems="10"
+        android:hint="Enter First Name"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/etRegLName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

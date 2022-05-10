@@ -11,6 +11,10 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.*
+import kotlin.collections.HashMap
 
 private const val TAG = "Register"
 
@@ -21,7 +25,10 @@ class Register : Fragment(R.layout.fragment_register) {
     private lateinit var etRegPassword : EditText
     private lateinit var btnRegister: Button
     private lateinit var auth: FirebaseAuth
-
+    private lateinit var userFName: EditText
+    private lateinit var userLName: EditText
+    private lateinit var db : FirebaseFirestore
+    private lateinit var userId : String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,12 +37,15 @@ class Register : Fragment(R.layout.fragment_register) {
         etRegEmail = requireView().findViewById(R.id.etRegEmail)
         etRegPassword = requireView().findViewById(R.id.etRegPassword)
         btnRegister = requireView().findViewById(R.id.btnRegister)
+        userFName = requireView().findViewById(R.id.etRegFName)
+        userLName = requireView().findViewById(R.id.etRegLName)
     }
 
     override fun onStart() {
         super.onStart()
 
         auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         btnRegister.setOnClickListener {
             createUser()
@@ -58,7 +68,19 @@ class Register : Fragment(R.layout.fragment_register) {
         }else {
             auth.createUserWithEmailAndPassword(etRegEmail.text.toString().trim(), etRegPassword.text.toString()).addOnCompleteListener {
                 if(it.isSuccessful){
+                    userId = auth.currentUser?.uid.toString()
+                    val docReference: DocumentReference = db.collection("users").document(userId)
                     Toast.makeText(this.context, "Registration Successful. Login to proceed.", Toast.LENGTH_LONG).show()
+
+                    val userDetails: HashMap<String, String> = HashMap<String, String>()
+                    userDetails["fName"] = userFName.text.toString().trim()
+                    userDetails["lName"] = userLName.text.toString().trim()
+                    userDetails["eMail"] = etRegEmail.text.toString().trim()
+
+                    docReference.set(userDetails).addOnSuccessListener {
+                        Log.d(TAG, "User profile created for: $userId")
+                    }
+
                     startActivity(intentUserLogin)
                 }else{
                     Log.e(TAG, "Registration Error: ${it.exception.toString()}")

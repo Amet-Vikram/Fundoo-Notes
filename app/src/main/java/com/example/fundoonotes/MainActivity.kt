@@ -120,11 +120,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when(item.itemId){
             R.id.profile -> {
                 //Open Profile Fragment
-                supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.flFragment, Profile())
-                    addToBackStack(null)
-                    commit()
-                }
+//                supportFragmentManager.beginTransaction().apply {
+//                    replace(R.id.flFragment, Profile())
+//                    addToBackStack(null)
+//                    commit()
+//                }
+
+                val profileDialog = ProfileDialogFragment()
+
+                profileDialog.show(supportFragmentManager, "profileDialog")
             }
             R.id.search_button -> {
                 Toast.makeText(this, "Searching...", Toast.LENGTH_SHORT).show()
@@ -132,6 +136,4 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         return super.onOptionsItemSelected(item)
     }
-
-
 }

@@ -1,26 +1,23 @@
 package com.example.fundoonotes
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.DialogFragment
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.squareup.picasso.Picasso
 
 private const val TAG = "ProfileDialogFragment"
 
@@ -33,24 +30,28 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
     private lateinit var db : FirebaseFirestore
     private lateinit var userID: String
     private lateinit var profilePic: ImageView
+    private lateinit var storageRef : StorageReference
+    private lateinit var imageURI : Uri
 
     //Result launcher for fetching profile picture
     private lateinit var resultLauncher : ActivityResultLauncher<Intent>
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         userID = auth.currentUser?.uid.toString()
+        storageRef = FirebaseStorage.getInstance().reference
 
         resultLauncher = this.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val imageURI : Uri? = result.data?.data
-                profilePic.setImageURI(imageURI)
+                imageURI= result.data?.data!!
+
+                uploadImageToFirebase(imageURI)
             }
         }
+        loadData(userID)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,32 +63,60 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
         tvFName = requireView().findViewById(R.id.tvFName)
         profilePic = requireView().findViewById(R.id.profilePicture)
 
-        loadData(userID)
+
     }
 
     override fun onStart() {
         super.onStart()
 
         val intentUserLogin = Intent(this.context, Authenticate::class.java )
+        val profileRef = storageRef.child("users/$userID/profile.jpg")
 
+        //Exit dialog fragment
         btnBack.setOnClickListener{
             dismiss()
         }
 
+        //Logout from current profile
         tvLogout.setOnClickListener{
             auth.signOut()
             startActivity(intentUserLogin)
         }
 
+        //Upload/update profile picture
+
         profilePic.setOnClickListener{
             val intentGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             resultLauncher.launch(intentGallery)
+        }
+
+        //Display the uploaded picture
+        profileRef.downloadUrl.addOnSuccessListener { uri ->
+            Picasso.get().load(uri).into(profilePic)
+        }
+        
+    }
+
+    private fun uploadImageToFirebase(imageURI: Uri) {
+        //Need Storage Reference, Image Uri and filename
+        val imageDirRef = storageRef.child("users/$userID/profile.jpg")
+
+        imageDirRef.putFile(imageURI).addOnSuccessListener {
+            if(it.error == null){
+                Toast.makeText(this.context, "Image Uploaded!", Toast.LENGTH_SHORT).show()
+                imageDirRef.downloadUrl.addOnSuccessListener { uri ->
+                    Picasso.get().load(uri).into(profilePic)
+                }
+            }
+            else{
+                Toast.makeText(this.context, "Upload Failed!", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "Upload failed: ${it.error}")
+            }
         }
     }
 
     //Load data from user Collection to Text Views
     private fun loadData(userID: String) {
-
         val userDetails = db.collection("users").document(userID)
 
         userDetails.get().addOnSuccessListener {
@@ -101,5 +130,4 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
             }
         }
     }
-
 }

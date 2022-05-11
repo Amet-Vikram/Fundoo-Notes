@@ -24,7 +24,7 @@
             android:id="@+id/tvFName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/regular"
+            android:fontFamily="@font/bold"
             android:gravity="start"
             android:text="User Name"
             android:textSize="15sp"
@@ -33,22 +33,22 @@
             app:layout_constraintHorizontal_bias="0.115"
             app:layout_constraintStart_toEndOf="@+id/textView10"
             app:layout_constraintTop_toTopOf="@+id/textView10"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.50" />
 
         <TextView
             android:id="@+id/tvEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/regular"
+            android:fontFamily="@font/bold"
             android:gravity="start"
             android:text="Email"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/textView11"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.098"
+            app:layout_constraintHorizontal_bias="0.137"
             app:layout_constraintStart_toEndOf="@+id/textView11"
             app:layout_constraintTop_toTopOf="@+id/textView11"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
             android:id="@+id/profilePicture"
@@ -68,10 +68,10 @@
             android:src="@drawable/back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.086"
+            app:layout_constraintHorizontal_bias="0.084"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.059" />
+            app:layout_constraintVertical_bias="0.050000012" />
 
         <TextView
             android:id="@+id/tvLogout"
@@ -93,12 +93,12 @@
             android:id="@+id/textView10"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/bold"
+            android:fontFamily="@font/regular"
             android:text="Name:"
             android:textSize="15sp"
             app:layout_constraintBottom_toTopOf="@+id/textView11"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.154"
+            app:layout_constraintHorizontal_bias="0.153"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
 
@@ -106,7 +106,7 @@
             android:id="@+id/textView11"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/bold"
+            android:fontFamily="@font/regular"
             android:text="E-Mail:"
             android:textSize="15sp"
             app:layout_constraintBottom_toTopOf="@+id/tvLogout"
@@ -114,6 +114,18 @@
             app:layout_constraintHorizontal_bias="0.154"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:fontFamily="@font/thin"
+            android:text="Click on image to upload/change image."
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="@+id/profilePicture"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/profilePicture"
+            app:layout_constraintTop_toTopOf="@+id/profilePicture" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

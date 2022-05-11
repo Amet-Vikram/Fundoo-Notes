@@ -16,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener{
     private lateinit var auth: FirebaseAuth
     private lateinit var btnLogout : Button
@@ -53,13 +52,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.setNavigationItemSelectedListener(this)
 
     }
-
-//    override fun onResume() {
-//        val width = resources.getDimensionPixelSize(R.dimen.dialog_min_width_major)
-//        val height = resources.getDimensionPixelSize(400)
-//        window.setLayout(width, height)
-//        super.onResume()
-//    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
@@ -128,12 +120,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when(item.itemId){
             R.id.profile -> {
                 //Open Profile Fragment
-//                supportFragmentManager.beginTransaction().apply {
-//                    replace(R.id.flFragment, Profile())
-//                    addToBackStack(null)
-//                    commit()
-//                }
-
                 profileDialog.show(supportFragmentManager, "profileDialog")
             }
             R.id.search_button -> {

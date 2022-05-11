@@ -15,4 +15,9 @@ class Authenticate : AppCompatActivity() {
             commit()
         }
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        moveTaskToBack(true)
+    }
 }

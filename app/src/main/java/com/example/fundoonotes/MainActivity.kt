@@ -1,14 +1,13 @@
 package com.example.fundoonotes
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
+
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener{
     private lateinit var auth: FirebaseAuth
     private lateinit var btnLogout : Button
@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var drawer : DrawerLayout
     private var backPressedTime : Long = 0
     private lateinit var navigationView: NavigationView
+    private val profileDialog = ProfileDialogFragment()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +53,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.setNavigationItemSelectedListener(this)
 
     }
+
+//    override fun onResume() {
+//        val width = resources.getDimensionPixelSize(R.dimen.dialog_min_width_major)
+//        val height = resources.getDimensionPixelSize(400)
+//        window.setLayout(width, height)
+//        super.onResume()
+//    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
@@ -125,8 +133,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                    addToBackStack(null)
 //                    commit()
 //                }
-
-                val profileDialog = ProfileDialogFragment()
 
                 profileDialog.show(supportFragmentManager, "profileDialog")
             }

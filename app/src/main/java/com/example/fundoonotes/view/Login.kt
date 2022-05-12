@@ -1,6 +1,5 @@
-package com.example.fundoonotes
+package com.example.fundoonotes.view
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -10,6 +9,14 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.example.fundoonotes.MainActivity
+import com.example.fundoonotes.R
+import com.example.fundoonotes.Register
+import com.example.fundoonotes.model.UserAuthService
+import com.example.fundoonotes.viewmodel.LoginViewModel
+import com.example.fundoonotes.viewmodel.LoginViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -19,8 +26,8 @@ class Login : Fragment(R.layout.fragment_login) {
     private lateinit var etLoginPassword : EditText
     private lateinit var btnLogin: Button
     private lateinit var tvRegister: TextView
-    private lateinit var auth: FirebaseAuth
 
+    private lateinit var loginViewModel: LoginViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,12 +36,12 @@ class Login : Fragment(R.layout.fragment_login) {
         etLoginPassword = requireView().findViewById(R.id.etLoginPassword)
         btnLogin = requireView().findViewById(R.id.btnLogin)
         tvRegister = requireView().findViewById(R.id.tvRegister)
+
+        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(UserAuthService()))[LoginViewModel::class.java]
     }
 
     override fun onStart() {
         super.onStart()
-
-        auth = FirebaseAuth.getInstance()
 
         btnLogin.setOnClickListener{
             loginUser()
@@ -61,17 +68,16 @@ class Login : Fragment(R.layout.fragment_login) {
             etLoginPassword.error = "Password can't be empty"
             etLoginPassword.requestFocus()
         }else{
-            auth.signInWithEmailAndPassword(email,password).addOnCompleteListener{
-                if(it.isSuccessful){
-                    Toast.makeText(this.context, "Login Successful!", Toast.LENGTH_LONG).show()
+            loginViewModel.userLogin(email, password)
+            loginViewModel.loginStatus.observe(viewLifecycleOwner, Observer {
+                if(it.status){
+                    Toast.makeText(this.context, it.message, Toast.LENGTH_SHORT).show()
                     startActivity(intentNoteHome)
                     requireActivity().finish()
                 }else{
-                    Toast.makeText(this.context, "Login error" + it.exception.toString(), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this.context, it.message , Toast.LENGTH_SHORT).show()
                 }
-            }
+            })
         }
     }
-
-
 }

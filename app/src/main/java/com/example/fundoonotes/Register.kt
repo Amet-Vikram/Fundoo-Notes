@@ -3,18 +3,18 @@ package com.example.fundoonotes
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
-import java.util.*
-import kotlin.collections.HashMap
+import androidx.lifecycle.ViewModelProvider
+import com.example.fundoonotes.model.UserAuthService
+import com.example.fundoonotes.viewmodel.RegisterViewModel
+import com.example.fundoonotes.viewmodel.RegisterViewModelFactory
+import androidx.lifecycle.Observer
+
 
 private const val TAG = "Register"
 
@@ -24,11 +24,10 @@ class Register : Fragment(R.layout.fragment_register) {
     private lateinit var etRegEmail : EditText
     private lateinit var etRegPassword : EditText
     private lateinit var btnRegister: Button
-    private lateinit var auth: FirebaseAuth
     private lateinit var userFName: EditText
     private lateinit var userLName: EditText
-    private lateinit var db : FirebaseFirestore
-    private lateinit var userId : String
+
+    private lateinit var registerViewModel: RegisterViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,13 +38,12 @@ class Register : Fragment(R.layout.fragment_register) {
         btnRegister = requireView().findViewById(R.id.btnRegister)
         userFName = requireView().findViewById(R.id.etRegFName)
         userLName = requireView().findViewById(R.id.etRegLName)
+
+        registerViewModel = ViewModelProvider(this, RegisterViewModelFactory(UserAuthService()))[RegisterViewModel::class.java]
     }
 
     override fun onStart() {
         super.onStart()
-
-        auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
 
         btnRegister.setOnClickListener {
             createUser()
@@ -57,6 +55,11 @@ class Register : Fragment(R.layout.fragment_register) {
     }
 
     private fun createUser() {
+        val email : String = etRegEmail.text.toString().trim()
+        val password : String = etRegPassword.text.toString().trim()
+        val fName: String = userFName.text.toString().trim()
+        val lName: String = userLName.text.toString().trim()
+
         val intentUserLogin = Intent(this.context, Authenticate::class.java)
 
         if(TextUtils.isEmpty(etRegEmail.toString())){
@@ -66,27 +69,15 @@ class Register : Fragment(R.layout.fragment_register) {
             etRegPassword.error = "Password can't be empty"
             etRegPassword.requestFocus()
         }else {
-            auth.createUserWithEmailAndPassword(etRegEmail.text.toString().trim(), etRegPassword.text.toString()).addOnCompleteListener {
-                if(it.isSuccessful){
-                    userId = auth.currentUser?.uid.toString()
-                    val docReference: DocumentReference = db.collection("users").document(userId)
-                    Toast.makeText(this.context, "Registration Successful. Login to proceed.", Toast.LENGTH_LONG).show()
-
-                    val userDetails: HashMap<String, String> = HashMap<String, String>()
-                    userDetails["fName"] = userFName.text.toString().trim()
-                    userDetails["lName"] = userLName.text.toString().trim()
-                    userDetails["eMail"] = etRegEmail.text.toString().trim()
-
-                    docReference.set(userDetails).addOnSuccessListener {
-                        Log.d(TAG, "User profile created for: $userId")
-                    }
-
+            registerViewModel.userRegister(fName, lName, email, password)
+            registerViewModel.registerStatus.observe(viewLifecycleOwner, Observer{
+                if(it.status){
+                    Toast.makeText(this.context, it.message, Toast.LENGTH_SHORT).show()
                     startActivity(intentUserLogin)
                 }else{
-                    Log.e(TAG, "Registration Error: ${it.exception.toString()}")
-                    Toast.makeText(this.context, "Registration error" + it.exception.toString(), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this.context, it.message , Toast.LENGTH_SHORT).show()
                 }
-            }
+            })
         }
     }
 

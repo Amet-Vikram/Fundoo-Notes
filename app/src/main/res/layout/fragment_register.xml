@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".Register"
     tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="75dp"
-    android:padding="16dp">
+    tools:layout_editor_absoluteY="75dp">
 
 
     <ImageView
@@ -26,8 +26,8 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="195dp"
-        android:layout_height="65dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
         android:layout_marginEnd="100dp"
         android:fontFamily="@font/bold"

@@ -89,10 +89,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onBackPressed(){
-        if (drawer.isDrawerOpen(GravityCompat.START)){
-            drawer.closeDrawer(GravityCompat.START)
-        }else if(backPressedTime + 2000 > System.currentTimeMillis()){
-            super .onBackPressed()
+//        if (drawer.isDrawerOpen(GravityCompat.START)){
+//            drawer.closeDrawer(GravityCompat.START)
+//        }else
+        if(backPressedTime + 2000 > System.currentTimeMillis()){
+            super.onBackPressed()
             return
         }
         else{

@@ -1,4 +1,4 @@
-package com.example.fundoonotes
+package com.example.fundoonotes.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,6 +14,7 @@ import com.example.fundoonotes.model.UserAuthService
 import com.example.fundoonotes.viewmodel.RegisterViewModel
 import com.example.fundoonotes.viewmodel.RegisterViewModelFactory
 import androidx.lifecycle.Observer
+import com.example.fundoonotes.R
 
 
 private const val TAG = "Register"
@@ -60,7 +61,7 @@ class Register : Fragment(R.layout.fragment_register) {
         val fName: String = userFName.text.toString().trim()
         val lName: String = userLName.text.toString().trim()
 
-        val intentUserLogin = Intent(this.context, Authenticate::class.java)
+        val intentUserLogin = Intent(this.context, MainActivity::class.java)
 
         if(TextUtils.isEmpty(etRegEmail.toString())){
             etRegEmail.error = "Email can't be empty"

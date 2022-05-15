@@ -11,13 +11,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.fundoonotes.MainActivity
 import com.example.fundoonotes.R
-import com.example.fundoonotes.Register
 import com.example.fundoonotes.model.UserAuthService
 import com.example.fundoonotes.viewmodel.LoginViewModel
 import com.example.fundoonotes.viewmodel.LoginViewModelFactory
-import com.google.firebase.auth.FirebaseAuth
 
 
 class Login : Fragment(R.layout.fragment_login) {
@@ -26,7 +23,6 @@ class Login : Fragment(R.layout.fragment_login) {
     private lateinit var etLoginPassword : EditText
     private lateinit var btnLogin: Button
     private lateinit var tvRegister: TextView
-
     private lateinit var loginViewModel: LoginViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.example.fundoonotes
+package com.example.fundoonotes.view
 
 import android.app.Activity
 import android.content.Intent
@@ -13,6 +13,13 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import com.example.fundoonotes.R
+import com.example.fundoonotes.model.User
+import com.example.fundoonotes.model.UserAuthService
+import com.example.fundoonotes.viewmodel.LoginViewModelFactory
+import com.example.fundoonotes.viewmodel.SharedViewModel
+import com.example.fundoonotes.viewmodel.SharedViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -33,6 +40,8 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
     private lateinit var storageRef : StorageReference
     private lateinit var imageURI : Uri
 
+    private lateinit var sharedViewModel: SharedViewModel
+
     //Result launcher for fetching profile picture
     private lateinit var resultLauncher : ActivityResultLauncher<Intent>
 
@@ -43,6 +52,8 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
         userID = auth.currentUser?.uid.toString()
         storageRef = FirebaseStorage.getInstance().reference
 
+        sharedViewModel = ViewModelProvider(requireActivity(), SharedViewModelFactory(UserAuthService()))[SharedViewModel::class.java]
+
         resultLauncher = this.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -51,7 +62,7 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
                 uploadImageToFirebase(imageURI)
             }
         }
-        loadData(userID)
+        loadData()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,14 +73,12 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
         tvEmail = requireView().findViewById(R.id.tvEmail)
         tvFName = requireView().findViewById(R.id.tvFName)
         profilePic = requireView().findViewById(R.id.profilePicture)
-
-
     }
 
     override fun onStart() {
         super.onStart()
 
-        val intentUserLogin = Intent(this.context, Authenticate::class.java )
+        val intentUserLogin = Intent(this.context, MainActivity::class.java )
         val profileRef = storageRef.child("users/$userID/profile.jpg")
 
         //Exit dialog fragment
@@ -84,7 +93,6 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
         }
 
         //Upload/update profile picture
-
         profilePic.setOnClickListener{
             val intentGallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             resultLauncher.launch(intentGallery)
@@ -97,6 +105,21 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
         
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        val profileRef = storageRef.child("users/$userID/profile.jpg")
+
+        //Load User Data
+        loadData()
+
+        //Load User ProfilePicture
+        profileRef.downloadUrl.addOnSuccessListener { uri ->
+            Picasso.get().load(uri).into(profilePic)
+        }
+    }
+
+    //UI UPDATE WRITE ONLY
     private fun uploadImageToFirebase(imageURI: Uri) {
         //Need Storage Reference, Image Uri and filename
         val imageDirRef = storageRef.child("users/$userID/profile.jpg")
@@ -105,6 +128,7 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
             if(it.error == null){
                 Toast.makeText(this.context, "Image Uploaded!", Toast.LENGTH_SHORT).show()
                 imageDirRef.downloadUrl.addOnSuccessListener { uri ->
+                    sharedViewModel.updateProfilePicture(uri) // LIve Data To pass info to Main Activity
                     Picasso.get().load(uri).into(profilePic)
                 }
             }
@@ -115,19 +139,32 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
         }
     }
 
+    //UI UPDATE READ ONLY
     //Load data from user Collection to Text Views
-    private fun loadData(userID: String) {
-        val userDetails = db.collection("users").document(userID)
+    private fun loadData() {
+        Log.i(TAG, "loadData Called!!")
+        sharedViewModel.loadUserData()
+        val currentUser: User? = sharedViewModel.useDetails.value
 
-        userDetails.get().addOnSuccessListener {
-            if(it.exists()){
-                val fullName: String = it.getString("fName") + " " + it.getString("lName")
-                tvFName.text = fullName
-                tvEmail.text = it.getString("eMail")
-            }
-            else{
-                Log.e(TAG, "Failed to get User Details")
-            }
+        if(currentUser != null){
+            Log.i(TAG, "Got Current User!!")
+            tvFName.text = currentUser.fullName
+            tvEmail.text = currentUser.eMail
+        }else{
+            Log.i(TAG, "User Data is Null")
         }
+
+//        val userDetails = db.collection("users").document(userID)
+//
+//        userDetails.get().addOnSuccessListener {
+//            if(it.exists()){
+//                val fullName: String = it.getString("fName") + " " + it.getString("lName")
+//                tvFName.text = fullName
+//                tvEmail.text = it.getString("eMail")
+//            }
+//            else{
+//                Log.e(TAG, "Failed to get User Details")
+//            }
+//        }
     }
 }

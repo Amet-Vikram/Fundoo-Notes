@@ -6,7 +6,7 @@ class Validator {
     private var validateName = "^[A-Z]\\w{2,12}$"
     private var validateEmail = "^[\\w+_-]+(?:\\.[\\w+_-]+)*[@][\\w]{1,}([.]{1}[a-z]{2,}){1,2}$"
     var validatePhone = "^(91)\\s\\d{10}"
-    var validatePassword = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
+    private var validatePassword = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
 
 
     fun validateName(name: String?): Boolean{

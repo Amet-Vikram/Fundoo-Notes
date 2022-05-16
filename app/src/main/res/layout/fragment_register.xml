@@ -12,7 +12,7 @@
 
 
     <ImageView
-        android:id="@+id/btnBack"
+        android:id="@+id/ivBackToLogin"
         android:layout_width="34dp"
         android:layout_height="32dp"
         android:src="@drawable/back"
@@ -35,7 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnBack" />
+        app:layout_constraintTop_toBottomOf="@+id/ivBackToLogin" />
 
     <EditText
         android:id="@+id/etRegEmail"

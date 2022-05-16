@@ -1,8 +1,15 @@
 package com.example.fundoonotes.model
 
+
 import android.util.Log
-import android.widget.Toast
+
+import com.example.fundoonotes.R
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -17,12 +24,8 @@ class UserAuthService() {
     fun userLogin(email: String, password: String, listener: (AuthListener) -> Unit){
         auth.signInWithEmailAndPassword(email,password).addOnCompleteListener{
             if(it.isSuccessful){
-//                Toast.makeText(this.context, "Login Successful!", Toast.LENGTH_LONG).show()
-//                startActivity(intentNoteHome)
-//                requireActivity().finish()
                 listener(AuthListener(true, "User login successful."))
             }else{
-//                Toast.makeText(this.context, "Login error" + it.exception.toString(), Toast.LENGTH_LONG).show()
                 listener(AuthListener(false, "User login failed."))
             }
         }
@@ -54,7 +57,6 @@ class UserAuthService() {
 
             } else {
                 listener(AuthListener(false, "User registration failed."))
-
             }
         }
     }
@@ -78,4 +80,17 @@ class UserAuthService() {
             }
         }
     }
+
+    fun firebaseAuthWithGoogle(idToken: String?, listener: (AuthListener) -> Unit) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential).addOnCompleteListener() {
+            if(it.isSuccessful){
+                listener(AuthListener(true, "User login successful."))
+            }else{
+                listener(AuthListener(false, "User login failed."))
+            }
+        }
+
+    }
+
 }

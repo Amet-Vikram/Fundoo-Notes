@@ -32,7 +32,7 @@ class Register : Fragment(R.layout.fragment_register) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnBack = requireView().findViewById(R.id.btnBack)
+        btnBack = requireView().findViewById(R.id.ivBackToLogin)
         etRegEmail = requireView().findViewById(R.id.etRegEmail)
         etRegPassword = requireView().findViewById(R.id.etRegPassword)
         btnRegister = requireView().findViewById(R.id.btnRegister)

@@ -20,4 +20,16 @@ class LoginViewModel(val userAuthService: UserAuthService): ViewModel() {
             }
         }
     }
+
+
+
+    fun userGLogin(idToken: String){
+
+        userAuthService.firebaseAuthWithGoogle(idToken){
+            //This is Callback
+            if(it.status){
+                _loginStatus.value = it
+            }
+        }
+    }
 }

@@ -88,8 +88,17 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4"
         app:layout_constraintVertical_bias="0.677" />
 
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/btnGSignIn"
+        android:layout_width="162dp"
+        android:layout_height="53dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnLogin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnLogin"
+        app:layout_constraintTop_toTopOf="@+id/btnLogin"/>
+
     <EditText
-        android:id="@+id/etLoginEmail"
+        android:id="@+id/etForgotEmail"
         android:layout_width="300dp"
         android:layout_height="48dp"
         android:background="@drawable/textfield"
@@ -101,13 +110,13 @@
         app:layout_constraintHorizontal_bias="0.252"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.582" />
+        app:layout_constraintVertical_bias="0.453" />
 
     <EditText
         android:id="@+id/etLoginPassword"
         android:layout_width="300dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="152dp"
+        android:layout_marginBottom="184dp"
         android:background="@drawable/textfield"
         android:ems="10"
         android:hint="Enter Password"
@@ -116,6 +125,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.252"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvForgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/bold"
+        android:text="Forgot Password ?"
+        android:textColor="@color/light_teal"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnLogin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.101"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etLoginPassword"
+        app:layout_constraintVertical_bias="0.155" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

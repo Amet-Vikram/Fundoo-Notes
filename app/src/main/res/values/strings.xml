@@ -7,4 +7,5 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="password_hint">8 characters, 1 upper case, 1 number, 1 special</string>
+<!--    <string name="default_web_client_id">859629026284-n5kq152s5dr4qecljpr9li2ieiou9jk0.apps.googleusercontent.com</string>-->
 </resources>

@@ -52,7 +52,7 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
 
         sharedViewModel = ViewModelProvider(requireActivity(), SharedViewModelFactory(UserAuthService()))[SharedViewModel::class.java]
 
-        loadData()
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +80,8 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
         tvEmail = requireView().findViewById(R.id.tvEmail)
         tvFName = requireView().findViewById(R.id.tvFName)
         profilePic = requireView().findViewById(R.id.profilePicture)
+
+        loadData()
     }
 
     override fun onStart() {

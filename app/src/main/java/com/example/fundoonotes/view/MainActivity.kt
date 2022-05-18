@@ -1,21 +1,14 @@
 package com.example.fundoonotes.view
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import com.example.fundoonotes.R
 import com.example.fundoonotes.model.UserAuthService
 import com.example.fundoonotes.viewmodel.SharedViewModel
 import com.example.fundoonotes.viewmodel.SharedViewModelFactory
-import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -72,18 +65,25 @@ class MainActivity : AppCompatActivity(){
         if(currentUser == null){
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.flFragment, Login())
-                addToBackStack(null)
+//                addToBackStack(null)
                 commit()
             }
         }else{
             supportFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment, Notes())
-                addToBackStack(null)
+                replace(R.id.flFragment, NoteFragment())
+//                addToBackStack(null)
                 commit()
             }
         }
     }
 
+
+    override fun onResume() {
+        super.onResume()
+
+        observeAppNav()
+
+    }
 //    override fun onNavigationItemSelected(item: MenuItem): Boolean {
 //        when(item.itemId){
 //            R.id.notes -> {
@@ -121,9 +121,9 @@ class MainActivity : AppCompatActivity(){
 
     override fun onBackPressed(){
         when {
-            supportFragmentManager.backStackEntryCount > 0 -> {
-                supportFragmentManager.popBackStackImmediate()
-            }
+//            supportFragmentManager.backStackEntryCount > 0 -> {
+//                supportFragmentManager.popBackStackImmediate()
+//            }
             backPressedTime + 2000 > System.currentTimeMillis() -> {
                 super.onBackPressed()
                 return

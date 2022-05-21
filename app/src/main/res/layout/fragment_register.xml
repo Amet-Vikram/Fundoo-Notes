@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".view.Register"
+    tools:context=".view.ui.Register"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="75dp"
     android:background="@color/white">
@@ -13,8 +13,8 @@
 
     <ImageView
         android:id="@+id/ivBackToLogin"
-        android:layout_width="34dp"
-        android:layout_height="32dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@drawable/back"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"

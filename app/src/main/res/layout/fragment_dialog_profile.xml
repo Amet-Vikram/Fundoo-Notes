@@ -7,7 +7,7 @@
     android:background="@color/gray"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:elevation="4dp"
-    tools:context=".view.MainActivity">
+    tools:context=".view.ui.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="350dp"

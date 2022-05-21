@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:animateLayoutChanges="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -36,6 +37,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:backgroundTint="@color/light_teal"
                 android:id="@+id/rcvAllNotes"/>
 
 
@@ -55,36 +57,6 @@
             tools:ignore="ImageContrastCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:gravity="start"-->
-<!--        android:padding="10dp"-->
-<!--        android:animateLayoutChanges="true"-->
-<!--        android:showDividers="middle"-->
-<!--        android:divider="@drawable/empty_divider"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/toolbar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="@drawable/toolbar_view"-->
-<!--            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
-<!--            android:elevation="5dp" />-->
-<!--&lt;!&ndash;        This is where recycler view will come.&ndash;&gt;-->
-
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:id="@+id/rcvAllNotes"/>-->
-
-
-<!--    </LinearLayout>-->
 
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"

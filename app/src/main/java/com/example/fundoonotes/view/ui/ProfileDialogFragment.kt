@@ -1,4 +1,4 @@
-package com.example.fundoonotes.view
+package com.example.fundoonotes.view.ui
 
 import android.app.Activity
 import android.content.Context
@@ -18,11 +18,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.fundoonotes.R
 import com.example.fundoonotes.model.User
 import com.example.fundoonotes.model.UserAuthService
-import com.example.fundoonotes.viewmodel.LoginViewModelFactory
 import com.example.fundoonotes.viewmodel.SharedViewModel
 import com.example.fundoonotes.viewmodel.SharedViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -51,8 +49,6 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
         super.onAttach(context)
 
         sharedViewModel = ViewModelProvider(requireActivity(), SharedViewModelFactory(UserAuthService()))[SharedViewModel::class.java]
-
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

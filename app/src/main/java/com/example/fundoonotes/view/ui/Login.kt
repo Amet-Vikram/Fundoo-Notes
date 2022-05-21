@@ -1,4 +1,4 @@
-package com.example.fundoonotes.view
+package com.example.fundoonotes.view.ui
 
 import android.app.Activity
 import android.content.Intent

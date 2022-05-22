@@ -13,32 +13,33 @@
         android:id="@+id/flMainFragment">
 
         <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="start"
-            android:padding="10dp"
             android:animateLayoutChanges="true"
-            android:showDividers="middle"
             android:divider="@drawable/empty_divider"
-            android:orientation="vertical">
+            android:gravity="start"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:showDividers="middle">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/toolbar_view"
+                android:elevation="5dp"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                android:elevation="5dp" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
             <!--        This is where recycler view will come.-->
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcvAllNotes"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:backgroundTint="@color/light_teal"
-                android:id="@+id/rcvAllNotes"/>
+                android:backgroundTint="@color/light_teal" />
 
 
         </LinearLayout>
@@ -55,6 +56,20 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="ImageContrastCheck" />
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/btnFetchNote"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="25dp"-->
+<!--            android:background="@color/green"-->
+<!--            android:backgroundTint="@color/green"-->
+<!--            android:contentDescription="Fetch Note"-->
+<!--            android:src="@drawable/ic_add_note"-->
+
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            tools:ignore="ImageContrastCheck" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

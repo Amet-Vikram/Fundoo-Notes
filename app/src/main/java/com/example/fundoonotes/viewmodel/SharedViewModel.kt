@@ -32,6 +32,9 @@ class SharedViewModel(private val userAuthService: UserAuthService): ViewModel()
     private val _noteStatus = MutableLiveData<NoteListener>()
     val noteStatus: LiveData<NoteListener> = _noteStatus
 
+    private val _userNoteList = MutableLiveData<ArrayList<Note>>()
+    val userNoteList: LiveData<ArrayList<Note>> = _userNoteList
+
     fun updateProfilePicture(newUri: Uri){
         _profilePicUri.value = newUri
     }
@@ -63,6 +66,11 @@ class SharedViewModel(private val userAuthService: UserAuthService): ViewModel()
         }
     }
 
+    fun fetchNotes(activityClosed: Boolean){
 
+        noteService.readNote(activityClosed){
+            _userNoteList.value = it
+        }
+    }
 
 }

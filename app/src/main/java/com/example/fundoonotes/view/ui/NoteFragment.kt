@@ -2,6 +2,7 @@ package com.example.fundoonotes.view.ui
 
 import android.os.Bundle
 import android.view.*
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +10,16 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.fundoonotes.R
+import com.example.fundoonotes.model.Note
+import com.example.fundoonotes.model.UserAuthService
+import com.example.fundoonotes.view.adapter.NoteAdapter
+import com.example.fundoonotes.viewmodel.SharedViewModel
+import com.example.fundoonotes.viewmodel.SharedViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 
@@ -20,13 +30,20 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     private lateinit var toolbar : Toolbar
     private lateinit var drawer : DrawerLayout
     private lateinit var navigationView: NavigationView
-
+//    private lateinit var btnFetchNote: FloatingActionButton
     private lateinit var btnAddNote: FloatingActionButton
+    private lateinit var sharedViewModel: SharedViewModel
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //Toolbar Options  toggle feature
         setHasOptionsMenu(true)
+
+        sharedViewModel = ViewModelProvider(requireActivity(), SharedViewModelFactory(
+            UserAuthService()
+        )
+        )[SharedViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -48,6 +65,14 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         toolbar = requireView().findViewById(R.id.toolbar)
         drawer = requireView().findViewById(R.id.drawer_layout)
         navigationView = requireView().findViewById(R.id.nav_view)
+//        btnFetchNote = requireView().findViewById(R.id.btnFetchNote)
+        recyclerView = requireView().findViewById(R.id.rcvAllNotes)
+
+        //Recycler View Attributes
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
+        recyclerView.setHasFixedSize(true)
+
+        fetchUserNotes()
     }
 
     override fun onStart() {
@@ -70,6 +95,9 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                 commit()
             }
         }
+
+
+        fetchUserNotes()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -120,6 +148,24 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         }
         drawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        sharedViewModel.fetchNotes(true)
+    }
+
+    private fun fetchUserNotes(){
+        val list: ArrayList<Note>? = sharedViewModel.userNoteList.value
+        sharedViewModel.fetchNotes(false)
+
+        if(list != null){
+            recyclerView.adapter = NoteAdapter(list)
+        }else{
+            Toast.makeText(this.context, "No notes found", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
 }

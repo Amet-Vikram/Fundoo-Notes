@@ -3,6 +3,7 @@ package com.example.fundoonotes.view.ui
 import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
+import android.text.format.DateFormat
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -95,7 +96,9 @@ class AddNote : Fragment() {
         val noteID = "${UUID.randomUUID()}"
         val noteTitle = etNoteTitle.text.toString()
         val note = etNoteDesc.text.toString()
-        val time: String = Calendar.getInstance().time.toString()
+//        val time: String = Calendar.getInstance().time.toString()
+        val currentDate = Date()
+        val time: String = DateFormat.format("dd-MM-yyyy", currentDate.time).toString()
 
         val newNote = Note(
             noteID, noteTitle, note, priority, created = time

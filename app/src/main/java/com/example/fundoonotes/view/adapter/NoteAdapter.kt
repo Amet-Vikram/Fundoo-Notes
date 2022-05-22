@@ -1,6 +1,5 @@
 package com.example.fundoonotes.view.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fundoonotes.R
 import com.example.fundoonotes.model.Note
-import org.w3c.dom.Text
 
 class NoteAdapter(private var noteList: ArrayList<Note>) :
     RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
@@ -22,7 +20,11 @@ class NoteAdapter(private var noteList: ArrayList<Note>) :
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        TODO("Not yet implemented")
+
+        val currentItem = noteList[position]
+        holder.noteTitle.text = currentItem.title
+        holder.noteBody.text = currentItem.desc
+        holder.noteCreated.text = currentItem.created
     }
 
     override fun getItemCount(): Int {

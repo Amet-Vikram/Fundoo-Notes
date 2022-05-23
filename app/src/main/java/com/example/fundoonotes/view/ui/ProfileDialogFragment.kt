@@ -29,27 +29,22 @@ import com.squareup.picasso.Picasso
 private const val TAG = "ProfileDialogFragment"
 
 class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
+    //UI
     private lateinit var btnBack : ImageView
     private lateinit var auth: FirebaseAuth
     private lateinit var tvLogout : TextView
     private lateinit var tvFName : TextView
     private lateinit var tvEmail : TextView
+    private lateinit var profilePic: ImageView
+
+    //Fire Base
     private lateinit var db : FirebaseFirestore
     private lateinit var userID: String
-    private lateinit var profilePic: ImageView
     private lateinit var storageRef : StorageReference
     private lateinit var imageURI : Uri
 
-    private lateinit var sharedViewModel: SharedViewModel
-
     //Result launcher for fetching profile picture
     private lateinit var resultLauncher : ActivityResultLauncher<Intent>
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        sharedViewModel = ViewModelProvider(requireActivity(), SharedViewModelFactory(UserAuthService()))[SharedViewModel::class.java]
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,14 +72,14 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
         tvFName = requireView().findViewById(R.id.tvFName)
         profilePic = requireView().findViewById(R.id.profilePicture)
 
-        loadData()
+
+        loadUserData()
     }
 
     override fun onStart() {
         super.onStart()
 
         val intentUserLogin = Intent(this.context, MainActivity::class.java )
-//        val profileRef = storageRef.child("users/$userID/profile.jpg")
 
         //Exit dialog fragment
         btnBack.setOnClickListener{
@@ -103,24 +98,6 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
             resultLauncher.launch(intentGallery)
         }
 
-        //Display the uploaded picture
-//        profileRef.downloadUrl.addOnSuccessListener { uri ->
-//            Picasso.get().load(uri).into(profilePic)
-//        }
-        
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        val profileRef = storageRef.child("users/$userID/profile.jpg")
-
-        //Load User Data
-        loadData()
-
-        //Load User ProfilePicture
-//        profileRef.downloadUrl.addOnSuccessListener { uri ->
-//            Picasso.get().load(uri).into(profilePic)
-//        }
     }
 
     //UI UPDATE WRITE ONLY
@@ -132,7 +109,6 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
             if(it.error == null){
                 Toast.makeText(this.context, "Image Uploaded!", Toast.LENGTH_SHORT).show()
                 imageDirRef.downloadUrl.addOnSuccessListener { uri ->
-                    sharedViewModel.updateProfilePicture(uri) // LIve Data To pass info to Main Activity
                     Picasso.get().load(uri).into(profilePic)
                 }
             }
@@ -143,41 +119,36 @@ class ProfileDialogFragment: DialogFragment(R.layout.fragment_dialog_profile) {
         }
     }
 
-    //UI UPDATE READ ONLY
-    //Load data from user Collection to Text Views
-    private fun loadData() {
-        Log.i(TAG, "loadData Called!!")
-        sharedViewModel.loadUserData()
 
-        val currentUser: User? = sharedViewModel.useDetails.value
-        val userID: String
-        val profileRef: StorageReference
+    //Load data from user Collection
+    private fun loadUserData() {
 
-        if(currentUser != null){
-            Log.i(TAG, "Got Current User!!")
-            tvFName.text = currentUser.fullName
-            tvEmail.text = currentUser.eMail
-            userID = currentUser.userID
+        val userDetails = db.collection("users").document(userID)
+        var currentUser : User?
+        var profileRef: StorageReference
 
-            profileRef = storageRef.child("users/$userID/profile.jpg")
+        userDetails.get().addOnSuccessListener {
+            if(it.exists()){
+                Log.i(TAG, "Fetched User Details")
+                val fullName: String = it.getString("fName") + " " + it.getString("lName")
+                val email: String = it.getString("eMail").toString()
 
-            profileRef.downloadUrl.addOnSuccessListener { uri ->
-                Picasso.get().load(uri).into(profilePic)
+                currentUser = User(userID,fullName, email)
+
+                Log.i(TAG, "Got Current User!!")
+                tvFName.text = currentUser!!.fullName
+                tvEmail.text = currentUser!!.eMail
+
+                //Fetching User Image
+                profileRef = storageRef.child("users/$userID/profile.jpg")
+
+                profileRef.downloadUrl.addOnSuccessListener { uri ->
+                    Picasso.get().load(uri).into(profilePic)
+                }
             }
-        }else{
-            Log.i(TAG, "User Data is Null")
+            else{
+                Log.e(TAG, "Failed to get User Details")
+            }
         }
-//        val userDetails = db.collection("users").document(userID)
-//
-//        userDetails.get().addOnSuccessListener {
-//            if(it.exists()){
-//                val fullName: String = it.getString("fName") + " " + it.getString("lName")
-//                tvFName.text = fullName
-//                tvEmail.text = it.getString("eMail")
-//            }
-//            else{
-//                Log.e(TAG, "Failed to get User Details")
-//            }
-//        }
     }
 }

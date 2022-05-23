@@ -20,7 +20,7 @@
             android:divider="@drawable/empty_divider"
             android:gravity="start"
             android:orientation="vertical"
-            android:padding="10dp"
+            android:padding="5dp"
             android:showDividers="middle">
 
             <androidx.appcompat.widget.Toolbar
@@ -32,6 +32,7 @@
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="5dp"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
             <!--        This is where recycler view will come.-->
 
@@ -56,20 +57,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="ImageContrastCheck" />
-
-<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--            android:id="@+id/btnFetchNote"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="25dp"-->
-<!--            android:background="@color/green"-->
-<!--            android:backgroundTint="@color/green"-->
-<!--            android:contentDescription="Fetch Note"-->
-<!--            android:src="@drawable/ic_add_note"-->
-
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            tools:ignore="ImageContrastCheck" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

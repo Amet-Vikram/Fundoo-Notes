@@ -7,10 +7,16 @@
         android:icon="@drawable/ic_search_note"
         android:title="Search Note" />
 
+    <item android:id="@+id/toggleView"
+        app:showAsAction="always"
+        android:title="Toggle View"
+        android:icon="@drawable/ic_grid"/>
+
     <item android:id="@+id/profile"
         app:showAsAction="always"
         android:title="Account Profile"
         android:icon="@drawable/ic_account_profile"/>
+
 
     <!--        app:actionLayout="@layout/profile_menu_layout"-->
 </menu>

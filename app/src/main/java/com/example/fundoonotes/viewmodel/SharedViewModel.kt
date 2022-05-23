@@ -14,18 +14,6 @@ class SharedViewModel(private val userAuthService: UserAuthService): ViewModel()
 
     private val noteService = NoteService()
 
-    private var _profilePicUri = MutableLiveData<Uri>()
-    val profilePicUri: LiveData<Uri> = _profilePicUri
-
-//    private val _gotoLoginPageStatus = MutableLiveData<Boolean>()
-//    val gotoLoginPageStatus: LiveData<Boolean> = _gotoLoginPageStatus
-//
-//    private val _gotoRegistrationPageStatus = MutableLiveData<Boolean>()
-//    val gotoRegistrationPage : LiveData<Boolean> = _gotoRegistrationPageStatus
-//
-//    private val _gotoHomePageStatus = MutableLiveData<Boolean>()
-//    val gotoHomePageStatus: LiveData<Boolean> = _gotoHomePageStatus
-
     private val _userDetails = MutableLiveData<User>()
     val useDetails: LiveData<User> = _userDetails
 
@@ -35,21 +23,7 @@ class SharedViewModel(private val userAuthService: UserAuthService): ViewModel()
     private val _userNoteList = MutableLiveData<ArrayList<Note>>()
     val userNoteList: LiveData<ArrayList<Note>> = _userNoteList
 
-    fun updateProfilePicture(newUri: Uri){
-        _profilePicUri.value = newUri
-    }
 
-//    fun setGotoLoginPageStatus(status: Boolean){
-//        _gotoLoginPageStatus.value = status
-//    }
-//
-//    fun setGotoRegistrationPageStatus(status: Boolean){
-//        _gotoRegistrationPageStatus.value = status
-//    }
-//
-//    fun setGotoHomePageStatus(status: Boolean){
-//        _gotoHomePageStatus.value = status
-//    }
 
     fun loadUserData(){
 

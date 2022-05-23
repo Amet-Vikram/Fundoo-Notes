@@ -18,7 +18,6 @@ class NoteService() {
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var userId : String
     private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
-    val gson = Gson()
 
     fun createNote(
         newNote: Note,
@@ -29,15 +28,6 @@ class NoteService() {
         val docReference: DocumentReference = db.collection("users").document(userId)
             .collection("userNotes").document(noteID)
 
-//        val newNote1 = hashMapOf(
-//            "id" to newNote.id,
-//            "title" to newNote.title,
-//            "desc" to newNote.desc,
-//            "priority" to newNote.priority,
-//            "archived" to newNote.isArchive,
-//            "created" to newNote.created
-//        )
-
         docReference.set(newNote).addOnCompleteListener {
             if(it.isSuccessful){
                 Log.d(TAG, "User note created for: $noteID")
@@ -46,15 +36,6 @@ class NoteService() {
                 listener(NoteListener(false, "Couldn't create note"))
             }
         }
-
-//        docReference.set(newNote1).addOnCompleteListener {
-//            if(it.isSuccessful){
-//                Log.d(TAG, "User note created for: $noteID")
-//                listener(NoteListener(true, "User note created!"))
-//            }else{
-//                listener(NoteListener(false, "Couldn't create note"))
-//            }
-//        }
     }
 
     fun readNote(isClosed: Boolean, noteList: (ArrayList<Note>) -> Unit){

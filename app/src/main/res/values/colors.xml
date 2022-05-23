@@ -10,10 +10,11 @@
     <color name="teal">#0E456A</color>
     <color name="orange">#F9803A</color>
     <color name="light_teal">#85A1B3</color>
-    <color name="electric">#A8548FCF</color>
+    <color name="electric">#698EBC</color>
     <color name="teal_alt">#FF166B7A</color>
     <color name="gray">#3E3E3E</color>
-    <color name="green">#5C7E46</color>
-    <color name="red">#B84F4F</color>
-    <color name="yellow">#BC9113</color>
+    <color name="light_gray">#BABABA</color>
+    <color name="green">#6DB858</color>
+    <color name="red">#C85F5F</color>
+    <color name="yellow">#C8B75F</color>
 </resources>

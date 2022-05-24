@@ -1,5 +1,6 @@
 package com.example.fundoonotes.view.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -7,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -29,6 +31,8 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
+import java.util.*
+import kotlin.collections.ArrayList
 
 private const val TAG = "NoteFragment"
 class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
@@ -45,6 +49,8 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var userId : String
     private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val userNotes = ArrayList<Note>()
+    private val noteSearchResults = ArrayList<Note>()
 
     private val LISTVIEW = "LIST_VIEW"
     private val GRIDVIEW = "GRID_VIEW"
@@ -67,6 +73,9 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         recyclerView = view.findViewById(R.id.rcvAllNotes)
 
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+
+        //To Hide the Title
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
 
         readNotes(false)
         return view
@@ -112,12 +121,46 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         this.menu = menu
         inflater.inflate(R.menu.menu_main, menu)
+
+        val searchButton = menu.findItem(R.id.search_button)
+        val searchView = searchButton.actionView as SearchView
+        val searchResults = ArrayList<Note>()
+        searchView.queryHint = "Search"
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onQueryTextChange(newText: String?): Boolean {
+                noteSearchResults.clear()
+
+                val searchText = newText!!.lowercase(Locale.getDefault())
+                if(searchText.isNotEmpty()){
+                    for(query in userNotes){
+                        if(query.title.lowercase(Locale.getDefault()).contains(newText.toString()) || query.desc.lowercase(Locale.getDefault()).contains(newText.toString())){
+                            searchResults.add(query)
+                            noteSearchResults.add(query)
+                        }
+                    }
+                    recyclerView.adapter!!.notifyDataSetChanged()
+                }else {
+                    noteSearchResults.clear()
+                    noteSearchResults.addAll(userNotes)
+                    recyclerView.adapter!!.notifyDataSetChanged()
+                }
+                return true
+            }
+        })
         return super.onCreateOptionsMenu(menu, inflater)
     }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val toggleButton = menu.getItem(1)
+        val profileButton = menu.getItem(2)
+
         when(item.itemId){
             R.id.profile -> {
                 //Open Profile Fragment
@@ -177,7 +220,6 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     private fun readNotes(isClosed: Boolean){
         userId = auth.currentUser?.uid.toString()
-        val userNotes = ArrayList<Note>()
 
         val docReference = db.collection("users").document(userId)
             .collection("userNotes")
@@ -195,7 +237,9 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                     val userNote = document.toObject<Note>()
                     userNotes.add(userNote)
                 }
-                recyclerView.adapter = NoteAdapter(userNotes, this.context)
+                noteSearchResults.addAll(userNotes)
+
+                recyclerView.adapter = NoteAdapter(noteSearchResults, this.context)
             } else {
                 Log.d(TAG, "Current data: null")
             }

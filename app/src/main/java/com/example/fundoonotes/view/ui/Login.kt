@@ -55,8 +55,6 @@ class Login : Fragment(R.layout.fragment_login) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requestGoogleSignIn()
-
         resultLauncher = this.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -84,6 +82,8 @@ class Login : Fragment(R.layout.fragment_login) {
 
     override fun onStart() {
         super.onStart()
+
+        requestGoogleSignIn()
 
         btnLogin.setOnClickListener{
             loginUser()

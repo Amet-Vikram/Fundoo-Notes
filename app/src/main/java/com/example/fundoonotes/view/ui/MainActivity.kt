@@ -76,13 +76,4 @@ class MainActivity : AppCompatActivity(){
         backPressedTime = System.currentTimeMillis()
     }
 
-//    override fun onStart() {
-//        super.onStart()
-//        val currentUser = auth.currentUser
-//        val intentUserLogin = Intent(this, Authenticate::class.java )
-//        if(currentUser == null){
-//            startActivity(intentUserLogin)
-//        }
-//    }
-
 }

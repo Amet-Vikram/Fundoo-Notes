@@ -29,6 +29,8 @@ class NoteAdapter(private var noteList: ArrayList<Note>, private val context: Co
         holder.noteBody.text = currentItem.desc
         holder.noteCreated.text = currentItem.created
 
+//        holder.itemView.set
+
         when(currentItem.priority){
             1 -> holder.noteTitle.background = context?.let { ContextCompat.getDrawable(it, R.drawable.red_dot) }
             2 -> holder.noteTitle.background = context?.let { ContextCompat.getDrawable(it, R.drawable.yellow_dot) }

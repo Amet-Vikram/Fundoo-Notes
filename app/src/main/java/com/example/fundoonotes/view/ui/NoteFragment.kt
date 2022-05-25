@@ -76,8 +76,8 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
         //To Hide the Title
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-
         readNotes(false)
+
         return view
     }
 
@@ -220,6 +220,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     private fun readNotes(isClosed: Boolean){
         userId = auth.currentUser?.uid.toString()
+        userNotes.clear()
 
         val docReference = db.collection("users").document(userId)
             .collection("userNotes")
@@ -237,6 +238,8 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                     val userNote = document.toObject<Note>()
                     userNotes.add(userNote)
                 }
+
+                noteSearchResults.clear()
                 noteSearchResults.addAll(userNotes)
 
                 recyclerView.adapter = NoteAdapter(noteSearchResults, this.context)

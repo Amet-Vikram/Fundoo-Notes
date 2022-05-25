@@ -18,17 +18,13 @@ private const val TAG = "MainActivity"
 //add this for nav drawer --> , NavigationView.OnNavigationItemSelectedListener
 class MainActivity : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
-    private lateinit var toolbar : Toolbar
     private var backPressedTime : Long = 0
-    private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         auth = Firebase.auth
-        sharedViewModel = ViewModelProvider(this, SharedViewModelFactory(UserAuthService()))[SharedViewModel::class.java]
-
 
         //Fragment Injection
         observeAppNav()

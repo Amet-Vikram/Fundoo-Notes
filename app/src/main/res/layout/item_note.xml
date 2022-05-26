@@ -32,7 +32,6 @@
                 android:fontFamily="@font/bold"
                 android:text="Title"
                 android:gravity="center"
-                android:background="@drawable/red_dot"
                 android:textColor="@color/teal"
                 android:textSize="18sp" />
 

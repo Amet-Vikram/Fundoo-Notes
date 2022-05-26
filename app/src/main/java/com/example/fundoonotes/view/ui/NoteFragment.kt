@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.fundoonotes.R
 import com.example.fundoonotes.model.Note
 import com.example.fundoonotes.model.UserAuthService
@@ -104,6 +105,9 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
         //Recycler View Attributes
         listView()
+
+        recyclerView.adapter
+
     }
 
     private fun listView() {
@@ -114,7 +118,8 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     private fun gridView(){
         currentView = GRIDVIEW
-        recyclerView.layoutManager = GridLayoutManager(this.context, 2)
+//        recyclerView.layoutManager = GridLayoutManager(this.context, 2)
+        recyclerView.layoutManager = StaggeredGridLayoutManager(2, 1)
         recyclerView.setHasFixedSize(true)
     }
 
@@ -223,7 +228,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         userNotes.clear()
 
         val docReference = db.collection("users").document(userId)
-            .collection("userNotes")
+            .collection("userNotes").orderBy("title")
 
         val noteUpdates = docReference.addSnapshotListener { result, e ->
             if (e != null) {
@@ -253,4 +258,5 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             noteUpdates.remove()
         }
     }
+
 }

@@ -1,16 +1,16 @@
 package com.example.fundoonotes.viewmodel
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.fundoonotes.model.*
-import java.net.URI
+
 
 private const val TAG = "SharedViewModel"
 
 class SharedViewModel(private val userAuthService: UserAuthService): ViewModel() {
+
 
     private val noteService = NoteService()
 
@@ -40,11 +40,5 @@ class SharedViewModel(private val userAuthService: UserAuthService): ViewModel()
         }
     }
 
-    fun fetchNotes(activityClosed: Boolean){
-
-        noteService.readNote(activityClosed){
-            _userNoteList.value = it
-        }
-    }
 
 }

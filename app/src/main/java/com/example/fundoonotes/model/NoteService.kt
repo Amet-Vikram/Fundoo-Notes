@@ -40,6 +40,7 @@ class NoteService() {
 
     fun readNote(isClosed: Boolean, noteList: (ArrayList<Note>) -> Unit){
         userId = auth.currentUser?.uid.toString()
+
         val docReference = db.collection("users").document(userId)
             .collection("userNotes")
 
@@ -104,6 +105,29 @@ class NoteService() {
             }else{
                 Log.e(TAG,"Couldn't fetch noteID")
             }
+        }
+    }
+
+    fun getNoteFromFireStore(listener: (ArrayList<Note>) -> Unit){
+        val userNotes = ArrayList<Note>()
+        var note: Note
+//        userId = auth.currentUser?.uid.toString()
+
+        auth.currentUser.let {
+            db.collection("users").document(it!!.uid)
+                .collection("userNotes").orderBy("title")
+                .get().addOnCompleteListener {
+                    if(it.isSuccessful && it.result != null){
+                        for(documents in it.result!!){
+                            note = documents.toObject<Note>()
+                            userNotes.add(note)
+                        }
+                        listener(userNotes)
+                    }else{
+                        listener(ArrayList<Note>())
+                        Log.d(TAG, "No notes Found")
+                    }
+                }
         }
     }
 }

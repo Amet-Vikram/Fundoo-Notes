@@ -33,7 +33,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="5dp"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_account_profile"
+                    android:layout_marginEnd="15dp"/>
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_button2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:actionViewClass="androidx.appcompat.widget.SearchView"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="15dp"/>
+
+            </androidx.appcompat.widget.Toolbar>
             <!--        This is where recycler view will come.-->
 
             <androidx.recyclerview.widget.RecyclerView

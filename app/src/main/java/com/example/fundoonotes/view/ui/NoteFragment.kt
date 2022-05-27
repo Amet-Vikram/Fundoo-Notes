@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,24 +13,19 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.fundoonotes.R
 import com.example.fundoonotes.model.Note
-import com.example.fundoonotes.model.UserAuthService
 import com.example.fundoonotes.view.adapter.NoteAdapter
-import com.example.fundoonotes.viewmodel.SharedViewModel
-import com.example.fundoonotes.viewmodel.SharedViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -97,7 +91,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
         btnAddNote.setOnClickListener{
             requireActivity().supportFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment, AddNote())
+                replace(R.id.flFragment, AddEditNote())
                 addToBackStack(null)
                 commit()
             }
@@ -130,8 +124,15 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         val searchButton = menu.findItem(R.id.search_button)
         val searchView = searchButton.actionView as SearchView
         val searchResults = ArrayList<Note>()
-        searchView.queryHint = "Search"
 
+        val profileButton = menu.getItem(2)
+        val storageRef = FirebaseStorage.getInstance().reference
+        val imageDirRef = storageRef.child("users/$userId/profile.jpg")
+//        imageDirRef.downloadUrl.addOnSuccessListener { uri ->
+//            Picasso.get().load(uri).into(profileButton.icon)
+//        }
+
+        searchView.queryHint = "Search"
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
@@ -164,7 +165,6 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val toggleButton = menu.getItem(1)
-        val profileButton = menu.getItem(2)
 
         when(item.itemId){
             R.id.profile -> {
@@ -179,9 +179,6 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                     toggleButton.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_grid)
                     listView()
                 }
-            }
-            R.id.search_button -> {
-                Toast.makeText(this.context, "Searching...", Toast.LENGTH_SHORT).show()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -225,7 +222,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     private fun readNotes(isClosed: Boolean){
         userId = auth.currentUser?.uid.toString()
-        userNotes.clear()
+
 
         val docReference = db.collection("users").document(userId)
             .collection("userNotes").orderBy("title")
@@ -235,6 +232,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                 Log.w(TAG, "Listen failed.", e)
                 return@addSnapshotListener
             }
+            userNotes.clear()
 
             if (result != null && !result.isEmpty) {
                 for (document in result) {
@@ -246,6 +244,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
                 noteSearchResults.clear()
                 noteSearchResults.addAll(userNotes)
+                Log.d(TAG, "Note list length = ${noteSearchResults.size}")
 
                 recyclerView.adapter = NoteAdapter(noteSearchResults, this.context)
             } else {
@@ -257,6 +256,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             Log.d(TAG, "Listener Closed")
             noteUpdates.remove()
         }
+
     }
 
 }

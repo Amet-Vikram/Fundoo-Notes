@@ -9,12 +9,12 @@
     <color name="white">#FFFFFFFF</color>
     <color name="teal">#0E456A</color>
     <color name="orange">#F9803A</color>
-    <color name="light_teal">#85A1B3</color>
-    <color name="electric">#698EBC</color>
+    <color name="light_teal">#A1ADB6</color>
     <color name="teal_alt">#FF166B7A</color>
     <color name="gray">#3E3E3E</color>
     <color name="light_gray">#BABABA</color>
-    <color name="green">#6DB858</color>
-    <color name="red">#C85F5F</color>
-    <color name="yellow">#C8B75F</color>
+    <color name="green">#98CA8B</color>
+    <color name="red">#CF9090</color>
+    <color name="yellow">#D8CD95</color>
+    <color name="electric">#8AA7CC</color>
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ui.AddNote"
+    tools:context=".view.ui.AddEditNote"
     android:background="@color/gray">
 
     <LinearLayout
@@ -61,6 +61,13 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/green_dot" />
 
+            <ImageView
+                android:id="@+id/priority_blue"
+                android:layout_width="60dp"
+                android:layout_height="30sp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/blue_dot" />
+
         </LinearLayout>
 
         <EditText
@@ -86,6 +93,16 @@
         android:layout_margin="26dp"
         android:contentDescription="Save Note"
         android:src="@drawable/ic_save_note"
+        android:backgroundTint="@color/orange"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnDeleteNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="26dp"
+        android:contentDescription="Save Note"
+        android:src="@drawable/ic_delete"
         android:backgroundTint="@color/orange"/>
 
 

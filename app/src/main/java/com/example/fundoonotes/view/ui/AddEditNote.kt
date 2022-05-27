@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
 import android.text.format.DateFormat
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,35 +17,55 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.fundoonotes.R
 import com.example.fundoonotes.model.Note
 import com.example.fundoonotes.model.UserAuthService
+import com.example.fundoonotes.viewmodel.NoteViewModel
+import com.example.fundoonotes.viewmodel.NoteViewModelFactory
 import com.example.fundoonotes.viewmodel.SharedViewModel
 import com.example.fundoonotes.viewmodel.SharedViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
-private const val TAG = "EditNoteFragment"
-class EditNoteFragment(val id: String, val title: String, val desc: String) : Fragment() {
+class AddEditNote() : Fragment() {
+
+
+    private var noteID: String? = null
+    private var title: String? = null
+    private var desc: String? = null
+    private var isUpdating: Boolean = false
 
     private lateinit var btnBack: ImageView
     private lateinit var btnPRed: ImageView
     private lateinit var btnPGreen: ImageView
+    private lateinit var btnPBlue: ImageView
     private lateinit var btnPYellow: ImageView
     private lateinit var etNoteTitle: EditText
     private lateinit var etNoteDesc: EditText
     private lateinit var btnSaveNote: FloatingActionButton
+    private lateinit var btnDelNote: FloatingActionButton
     private lateinit var sharedViewModel: SharedViewModel
-    private var priority: Int = 3
+    private lateinit var noteVM: NoteViewModel
+    private var priority: Int = 4
+
+
+    constructor(id: String, title: String, desc: String) : this() {
+        isUpdating = true // Temporary
+        this.noteID = id
+        this.title = title
+        this.desc = desc
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
+        noteVM = ViewModelProvider(requireActivity(), NoteViewModelFactory())[NoteViewModel::class.java]
         sharedViewModel = ViewModelProvider(requireActivity(), SharedViewModelFactory(UserAuthService()))[SharedViewModel::class.java]
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_edit_note, container, false)
+        return inflater.inflate(R.layout.fragment_add_note, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,23 +75,32 @@ class EditNoteFragment(val id: String, val title: String, val desc: String) : Fr
         btnPYellow = requireView().findViewById(R.id.priority_yellow)
         btnPRed = requireView().findViewById(R.id.priority_red)
         btnPGreen = requireView().findViewById(R.id.priority_green)
+        btnPBlue = requireView().findViewById(R.id.priority_blue)
         btnSaveNote = requireView().findViewById(R.id.btnSaveNote)
+        btnDelNote = requireView().findViewById(R.id.btnDeleteNote)
         etNoteTitle = requireView().findViewById(R.id.etNoteTitle)
         etNoteDesc = requireView().findViewById(R.id.etNoteDesc)
 
-        etNoteTitle.setText(title, TextView.BufferType.EDITABLE)
-        etNoteDesc.setText(desc, TextView.BufferType.EDITABLE)
+        btnDelNote.visibility = View.GONE
+
+        if(isUpdating){
+            btnDelNote.visibility = View.VISIBLE
+            etNoteTitle.setText(title, TextView.BufferType.EDITABLE)
+            etNoteTitle.requestFocus()
+            etNoteDesc.setText(desc, TextView.BufferType.EDITABLE)
+        }
+
     }
 
     override fun onStart() {
         super.onStart()
-
 
         btnPRed.setOnClickListener{
             priority = 1
             btnPRed.setImageResource(R.drawable.ic_save_note)
             btnPYellow.setImageResource(0)
             btnPGreen.setImageResource(0)
+            btnPBlue.setImageResource(0)
         }
 
         btnPYellow.setOnClickListener{
@@ -80,6 +108,7 @@ class EditNoteFragment(val id: String, val title: String, val desc: String) : Fr
             btnPYellow.setImageResource(R.drawable.ic_save_note)
             btnPRed.setImageResource(0)
             btnPGreen.setImageResource(0)
+            btnPBlue.setImageResource(0)
         }
 
         btnPGreen.setOnClickListener{
@@ -87,6 +116,15 @@ class EditNoteFragment(val id: String, val title: String, val desc: String) : Fr
             btnPGreen.setImageResource(R.drawable.ic_save_note)
             btnPRed.setImageResource(0)
             btnPYellow.setImageResource(0)
+            btnPBlue.setImageResource(0)
+        }
+
+        btnPBlue.setOnClickListener{
+            priority = 4
+            btnPBlue.setImageResource(R.drawable.ic_save_note)
+            btnPRed.setImageResource(0)
+            btnPYellow.setImageResource(0)
+            btnPGreen.setImageResource(0)
         }
 
         btnBack.setOnClickListener{
@@ -94,22 +132,28 @@ class EditNoteFragment(val id: String, val title: String, val desc: String) : Fr
         }
 
         btnSaveNote.setOnClickListener{
-            Log.d(TAG, "Note body => ${etNoteDesc.text}")
-            Toast.makeText(this.context, "Note Edited", Toast.LENGTH_SHORT).show()
-//            editNote()
+            if(isUpdating){
+                editNote()
+            }else{
+                createNote()
+            }
+        }
+
+        btnDelNote.setOnClickListener{
+            deleteNote()
         }
     }
 
-    private fun editNote() {
-        val noteID = this.id
+    private fun createNote() {
+        val newNoteID = "${UUID.randomUUID()}"
         val noteTitle = etNoteTitle.text.toString()
         val note = etNoteDesc.text.toString()
-//        val time: String = Calendar.getInstance().time.toString()
+
         val currentDate = Date()
         val time: String = DateFormat.format("dd-MM-yyyy", currentDate.time).toString()
 
         val newNote = Note(
-            noteID, noteTitle, note, priority, created = time
+            newNoteID, noteTitle, note, priority, created = time
         )
 
         if(TextUtils.isEmpty(note)){
@@ -117,16 +161,43 @@ class EditNoteFragment(val id: String, val title: String, val desc: String) : Fr
             etNoteDesc.requestFocus()
         }else{
             sharedViewModel.createNote(newNote)
-
-            sharedViewModel.noteStatus.observe(viewLifecycleOwner, Observer {
-                if(it.status){
-                    Toast.makeText(this.context, it.message, Toast.LENGTH_SHORT).show()
-                    requireActivity().supportFragmentManager.popBackStack()
-                }else{
-                    Toast.makeText(this.context, it.message , Toast.LENGTH_SHORT).show()
-                }
-            })
+            uiResponse()
         }
     }
 
+    private fun editNote() {
+        val editedNoteID = noteID!!
+        val editedNoteTitle = etNoteTitle.text.toString()
+        val editedNoteDesc = etNoteDesc.text.toString()
+        val currentDate = Date()
+        val time: String = DateFormat.format("dd-MM-yyyy", currentDate.time).toString()
+
+        val editedNote = Note(
+            editedNoteID, editedNoteTitle, editedNoteDesc, priority, created = time
+        )
+
+        if(TextUtils.isEmpty(editedNoteDesc)){
+            etNoteDesc.error = "Note can't be empty"
+            etNoteDesc.requestFocus()
+        }else{
+            noteVM.editNote(editedNote)
+            uiResponse()
+        }
+    }
+
+    private fun deleteNote() {
+        noteVM.deleteNote(noteID!!)
+        uiResponse()
+    }
+
+    private fun uiResponse(){
+        noteVM.noteStatus.observe(viewLifecycleOwner, Observer {
+            if(it.status){
+                Toast.makeText(this.context, it.message, Toast.LENGTH_SHORT).show()
+                requireActivity().supportFragmentManager.popBackStack()
+            }else{
+                Toast.makeText(this.context, it.message , Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 }

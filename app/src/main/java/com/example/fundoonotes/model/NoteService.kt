@@ -21,7 +21,7 @@ class NoteService() {
 
     fun createNote(
         newNote: Note,
-        listener: (NoteListener) -> Unit,
+        listener: (NoteListener) -> Unit
     ){
         userId = auth.currentUser?.uid.toString()
         val noteID = newNote.id
@@ -75,9 +75,37 @@ class NoteService() {
         }
     }
 
-    fun updateNote(){}
+    fun updateNote(editedNote: Note, listener: (NoteListener) -> Unit) {
+        userId = auth.currentUser?.uid.toString()
+        val noteID = editedNote.id
+        val docReference: DocumentReference = db.collection("users").document(userId)
+            .collection("userNotes").document(noteID)
 
-    fun deleteNote(){}
+        docReference.get().addOnSuccessListener {
+            if(it.exists()){
+                Log.d(TAG,"Note Updated!")
+                docReference.set(editedNote)
+                listener(NoteListener(true, "Note updated!"))
+            }else{
+                Log.e(TAG,"Failed to update. Note Id: $noteID not found")
+                listener(NoteListener(false, "Couldn't update note."))
+            }
+        }
+    }
+
+    fun deleteNote(noteID: String, listener: (NoteListener) -> Unit){
+        userId = auth.currentUser?.uid.toString()
+        val docReference: DocumentReference = db.collection("users").document(userId)
+            .collection("userNotes").document(noteID)
+
+        docReference.delete().addOnCompleteListener {
+            if(it.isSuccessful){
+                listener(NoteListener(true, "Note Deleted!"))
+            }else{
+                Log.e(TAG,"Couldn't fetch noteID")
+            }
+        }
+    }
 }
 
 data class Note(

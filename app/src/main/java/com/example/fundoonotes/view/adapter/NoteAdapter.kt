@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fundoonotes.R
 import com.example.fundoonotes.model.Note
-import com.example.fundoonotes.view.ui.EditNoteFragment
+import com.example.fundoonotes.view.ui.AddEditNote
 
 class NoteAdapter(private var noteList: ArrayList<Note>, private val context: Context?) :
     RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
@@ -37,7 +37,7 @@ class NoteAdapter(private var noteList: ArrayList<Note>, private val context: Co
             activity = context as AppCompatActivity
             Toast.makeText(context, "Note title: ${currentItem.title}", Toast.LENGTH_SHORT).show()
             activity.supportFragmentManager.beginTransaction()
-                .replace(R.id.flFragment, EditNoteFragment(currentItem.id, currentItem.title, currentItem.desc))
+                .replace(R.id.flFragment, AddEditNote(currentItem.id, currentItem.title, currentItem.desc))
                 .addToBackStack(null)
                 .commit()
         }
@@ -46,6 +46,7 @@ class NoteAdapter(private var noteList: ArrayList<Note>, private val context: Co
             1 -> holder.itemView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.red_dot) }
             2 -> holder.itemView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.yellow_dot) }
             3 -> holder.itemView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.green_dot) }
+            4 -> holder.itemView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.blue_dot) }
         }
     }
 

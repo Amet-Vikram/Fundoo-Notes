@@ -39,6 +39,4 @@ class SharedViewModel(private val userAuthService: UserAuthService): ViewModel()
             _noteStatus.value = it
         }
     }
-
-
 }

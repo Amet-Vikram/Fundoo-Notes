@@ -4,15 +4,12 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.core.view.MenuItemCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -21,14 +18,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.fundoonotes.R
 import com.example.fundoonotes.model.Note
+import com.example.fundoonotes.model.UserAuthService
 import com.example.fundoonotes.view.adapter.NoteAdapter
 import com.example.fundoonotes.viewmodel.NoteViewModel
 import com.example.fundoonotes.viewmodel.NoteViewModelFactory
+import com.example.fundoonotes.viewmodel.SharedViewModel
+import com.example.fundoonotes.viewmodel.SharedViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
@@ -39,23 +37,26 @@ private const val TAG = "NoteFragment"
 class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
 
     private val profileDialog = ProfileDialogFragment()
-
+    //UI elements
     private lateinit var drawer : DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var btnAddNote: FloatingActionButton
     private lateinit var recyclerView: RecyclerView
     private lateinit var toolbar: Toolbar
     private lateinit var menu: Menu
-    private lateinit var profileImage: CircleImageView
-    private lateinit var searchButton2: SearchView
+    private lateinit var ivProfile: CircleImageView
+    private lateinit var searchButton: SearchView
+    //ViewModels
     private lateinit var noteVM: NoteViewModel
-
+    private lateinit var sharedVM: SharedViewModel
+    //FireBase
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var userId : String
-    private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
+    //RecyclerView
+    private lateinit var noteAdapter: NoteAdapter
     private var userNotes =  ArrayList<Note>()
+    private var userNotes2 =  ArrayList<Note>()
     private val noteSearchResults = ArrayList<Note>()
-
     private val LISTVIEW = "LIST_VIEW"
     private val GRIDVIEW = "GRID_VIEW"
     private lateinit var currentView: String
@@ -64,6 +65,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         super.onCreate(savedInstanceState)
 
         noteVM = ViewModelProvider(requireActivity(), NoteViewModelFactory())[NoteViewModel::class.java]
+        sharedVM = ViewModelProvider(this, SharedViewModelFactory(UserAuthService()))[SharedViewModel::class.java]
         //Toolbar Options  toggle feature
         setHasOptionsMenu(true)
     }
@@ -77,17 +79,15 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         drawer = view.findViewById(R.id.drawer_layout)
         navigationView = view.findViewById(R.id.nav_view)
         recyclerView = view.findViewById(R.id.rcvAllNotes)
-        profileImage = view.findViewById(R.id.profile_image)
-
-        searchButton2 = view.findViewById(R.id.search_button2)
+        ivProfile = view.findViewById(R.id.profile_image)
+        searchButton = view.findViewById(R.id.search_button2)
 
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
         //To Hide the Title
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-//        readNotes(false)
-        getNotes()
 
+        getNotes()
         return view
     }
 
@@ -114,68 +114,57 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
         //Recycler View Attributes
         listView()
-    }
 
-    private fun listView() {
-        currentView = LISTVIEW
-        recyclerView.layoutManager = LinearLayoutManager(this.context)
-        recyclerView.setHasFixedSize(true)
-    }
-
-    private fun gridView(){
-        currentView = GRIDVIEW
-        recyclerView.layoutManager = StaggeredGridLayoutManager(2, 1)
-        recyclerView.setHasFixedSize(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         this.menu = menu
         inflater.inflate(R.menu.menu_main, menu)
 
+//        val search = menu.findItem(R.id.search_button)
+//        val searchView = search.actionView as SearchView
+//        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                return false
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                noteAdapter.filter.filter(newText)
+//                return false
+//            }
+//        })
+
+        //updating the user profile image
         userId = auth.currentUser?.uid.toString()
         val storageRef = FirebaseStorage.getInstance().reference
         val imageDirRef = storageRef.child("users/$userId/profile.jpg")
-
         imageDirRef.downloadUrl.addOnSuccessListener { uri ->
             if(uri!= null){
-                Picasso.get().load(uri).into(profileImage)
+                Picasso.get().load(uri).into(ivProfile)
             }
         }
 
-        profileImage.setOnClickListener {
+        ivProfile.setOnClickListener {
             profileDialog.show(requireActivity().supportFragmentManager, "profileDialog")
         }
 
-        searchButton2.queryHint = "Search"
-        searchButton2.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+        searchButton.queryHint = "Search"
+        searchButton.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-                return true
+                return false
             }
 
             @SuppressLint("NotifyDataSetChanged")
             override fun onQueryTextChange(newText: String?): Boolean {
-                noteSearchResults.clear()
-                val searchText = newText!!.lowercase(Locale.getDefault())
-
-                if(searchText.isNotEmpty()){
-                    for(query in userNotes){
-                        if(query.title.lowercase(Locale.getDefault()).contains(newText.toString()) || query.desc.lowercase(Locale.getDefault()).contains(newText.toString())){
-                            noteSearchResults.add(query)
-                        }
-                    }
-                    recyclerView.adapter!!.notifyDataSetChanged()
-                }else {
-                    noteSearchResults.addAll(userNotes)
-                    recyclerView.adapter!!.notifyDataSetChanged()
-                }
-                return true
+                noteAdapter.filter.filter(newText)
+                return false
             }
         })
         return super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val toggleButton = menu.getItem(1)
+        val toggleButton = menu.getItem(0)
 
         when(item.itemId){
             R.id.toggleView -> {
@@ -227,15 +216,37 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         noteVM.getNoteStatus.observe(viewLifecycleOwner, androidx.lifecycle.Observer {noteList ->
             if(noteList.isNotEmpty()){
                 userNotes.clear()
+                userNotes2.clear()
 
                 for(note in noteList){
                     userNotes.add(note)
+                    userNotes2.add(note)
                 }
-                Log.d(TAG, "List length = ${userNotes.size}")
+                Log.d(TAG, " List length in getNotes() = ${userNotes2.size}")
                 noteSearchResults.clear()
                 noteSearchResults.addAll(userNotes)
-                recyclerView.adapter = NoteAdapter(noteSearchResults, this.context)
+                noteAdapter = NoteAdapter(userNotes2, this.context)
+                recyclerView.adapter = noteAdapter
+//                recyclerView.adapter = NoteAdapter(userNotes2, this.context)
             }
+        })
+    }
+
+    private fun listView() {
+        currentView = LISTVIEW
+        recyclerView.layoutManager = LinearLayoutManager(this.context)
+        recyclerView.setHasFixedSize(true)
+    }
+
+    private fun gridView(){
+        currentView = GRIDVIEW
+        recyclerView.layoutManager = StaggeredGridLayoutManager(2, 1)
+        recyclerView.setHasFixedSize(true)
+    }
+
+    private fun searchNote(){
+        sharedVM.queryText.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+
         })
     }
 }

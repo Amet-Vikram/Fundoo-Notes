@@ -11,7 +11,6 @@ private const val TAG = "SharedViewModel"
 
 class SharedViewModel(private val userAuthService: UserAuthService): ViewModel() {
 
-
     private val noteService = NoteService()
 
     private val _userDetails = MutableLiveData<User>()
@@ -23,10 +22,10 @@ class SharedViewModel(private val userAuthService: UserAuthService): ViewModel()
     private val _userNoteList = MutableLiveData<ArrayList<Note>>()
     val userNoteList: LiveData<ArrayList<Note>> = _userNoteList
 
-
+    private val _queryText = MutableLiveData<String>()
+    val queryText: LiveData<String> = _queryText
 
     fun loadUserData(){
-
          userAuthService.loadUserData(){
              Log.i(TAG, "Mutable Data Updated")
              _userDetails.value = it
@@ -34,9 +33,13 @@ class SharedViewModel(private val userAuthService: UserAuthService): ViewModel()
     }
 
     fun createNote(newNote: Note){
-
         noteService.createNote(newNote){
             _noteStatus.value = it
         }
+    }
+
+    fun setQueryText(query: String){
+
+        _queryText.value = query
     }
 }

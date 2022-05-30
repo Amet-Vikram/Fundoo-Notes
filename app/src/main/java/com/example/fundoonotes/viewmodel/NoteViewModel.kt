@@ -18,15 +18,20 @@ class NoteViewModel(): ViewModel() {
     private val _getNoteStatus = MutableLiveData<ArrayList<Note>>()
     val getNoteStatus: LiveData<ArrayList<Note>> = _getNoteStatus
 
-    fun editNote(editedNote: Note) {
+    fun createNote(newNote: Note){
 
+        noteService.createNote(newNote){
+            _noteStatus.value = it
+        }
+    }
+
+    fun editNote(editedNote: Note) {
         noteService.updateNote(editedNote){
             _noteStatus.value = it
         }
     }
 
     fun deleteNote(noteID: String){
-
         noteService.deleteNote(noteID){
             _noteStatus.value = it
         }

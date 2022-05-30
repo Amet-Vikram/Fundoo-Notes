@@ -160,7 +160,7 @@ class AddEditNote() : Fragment() {
             etNoteDesc.error = "Note can't be empty"
             etNoteDesc.requestFocus()
         }else{
-            sharedViewModel.createNote(newNote)
+            noteVM.createNote(newNote)
             uiResponse()
         }
     }
@@ -175,7 +175,6 @@ class AddEditNote() : Fragment() {
         val editedNote = Note(
             editedNoteID, editedNoteTitle, editedNoteDesc, priority, created = time
         )
-
         if(TextUtils.isEmpty(editedNoteDesc)){
             etNoteDesc.error = "Note can't be empty"
             etNoteDesc.requestFocus()

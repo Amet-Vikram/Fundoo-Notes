@@ -1,9 +1,12 @@
 package com.example.fundoonotes.view.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -12,9 +15,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.fundoonotes.R
 import com.example.fundoonotes.model.Note
 import com.example.fundoonotes.view.ui.AddEditNote
+import java.util.*
+import kotlin.collections.ArrayList
 
+private const val TAG = "NoteAdapter"
 class NoteAdapter(private var noteList: ArrayList<Note>, private val context: Context?) :
-    RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
+    RecyclerView.Adapter<NoteAdapter.NoteViewHolder>(), Filterable {
+
+    private var noteListAll = ArrayList<Note>()
+    private var list = ArrayList<Note>()
+    var filteredList = ArrayList<Note>()
+
+    init {
+//        noteListAll = this.noteList
+        filteredList = this.noteList
+    }
 
     private lateinit var activity: AppCompatActivity
 
@@ -25,13 +40,11 @@ class NoteAdapter(private var noteList: ArrayList<Note>, private val context: Co
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-
-        val currentItem = noteList[position]
+        val currentItem = filteredList[position]
 
         holder.noteTitle.text = currentItem.title
         holder.noteBody.text = currentItem.desc
         holder.noteCreated.text = currentItem.created
-
 
         holder.itemView.setOnClickListener {
             activity = context as AppCompatActivity
@@ -51,7 +64,7 @@ class NoteAdapter(private var noteList: ArrayList<Note>, private val context: Co
     }
 
     override fun getItemCount(): Int {
-        return noteList.size
+        return filteredList.size
     }
 
     class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -59,6 +72,43 @@ class NoteAdapter(private var noteList: ArrayList<Note>, private val context: Co
         val noteTitle: TextView = itemView.findViewById(R.id.item_title)
         val noteBody: TextView = itemView.findViewById(R.id.item_desc)
         val noteCreated: TextView = itemView.findViewById(R.id.item_date)
+    }
+
+
+    override fun getFilter(): Filter {
+        return object: Filter(){
+            //Background Thread
+            override fun performFiltering(charSequence: CharSequence): FilterResults {
+
+                if(charSequence.toString().isEmpty()){
+                    filteredList = noteList
+                    Log.d(TAG, "Size if search text empty = ${filteredList.size}")
+                }
+                else{
+                    val resultList = ArrayList<Note>()
+                    for(note in noteList){
+                        if(note.title.lowercase(Locale.getDefault()).contains(charSequence.toString()) || note.desc.lowercase(
+                                Locale.getDefault()).contains(charSequence.toString())){
+                            resultList.add(note)
+                            Log.d(TAG, "Size result list = ${filteredList.size}")
+                        }
+                        filteredList = resultList
+                    }
+                }
+                val filterResults = FilterResults()
+                filterResults.values = filteredList
+                Log.d(TAG, "Size of filtered list with result list = ${filteredList.size}")
+                return filterResults
+            }
+
+            //UI Thread
+            override fun publishResults(p0: CharSequence?, filterResults: FilterResults?) {
+//                filteredList.clear()
+//                filteredList.addAll(filterResults?.values as Collection<Note>)
+                filteredList= filterResults?.values as ArrayList<Note>
+                notifyDataSetChanged()
+            }
+        }
     }
 }
 

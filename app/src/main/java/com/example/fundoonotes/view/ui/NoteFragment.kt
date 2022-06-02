@@ -30,7 +30,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import java.util.*
 import kotlin.collections.ArrayList
 
 private const val TAG = "NoteFragment"
@@ -55,8 +54,6 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     //RecyclerView
     private lateinit var noteAdapter: NoteAdapter
     private var userNotes =  ArrayList<Note>()
-    private var userNotes2 =  ArrayList<Note>()
-    private val noteSearchResults = ArrayList<Note>()
     private val LISTVIEW = "LIST_VIEW"
     private val GRIDVIEW = "GRID_VIEW"
     private lateinit var currentView: String
@@ -64,7 +61,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        noteVM = ViewModelProvider(requireActivity(), NoteViewModelFactory())[NoteViewModel::class.java]
+        noteVM = ViewModelProvider(requireActivity(), NoteViewModelFactory(this.requireContext()))[NoteViewModel::class.java]
         sharedVM = ViewModelProvider(this, SharedViewModelFactory(UserAuthService()))[SharedViewModel::class.java]
         //Toolbar Options  toggle feature
         setHasOptionsMenu(true)
@@ -121,19 +118,6 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         this.menu = menu
         inflater.inflate(R.menu.menu_main, menu)
 
-//        val search = menu.findItem(R.id.search_button)
-//        val searchView = search.actionView as SearchView
-//        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                noteAdapter.filter.filter(newText)
-//                return false
-//            }
-//        })
-
         //updating the user profile image
         userId = auth.currentUser?.uid.toString()
         val storageRef = FirebaseStorage.getInstance().reference
@@ -156,7 +140,10 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
             @SuppressLint("NotifyDataSetChanged")
             override fun onQueryTextChange(newText: String?): Boolean {
-                noteAdapter.filter.filter(newText)
+                sharedVM.setQueryText(newText!!)
+                sharedVM.queryText.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+                    noteAdapter.filter.filter(it)
+                })
                 return false
             }
         })
@@ -212,22 +199,17 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     }
 
     private fun getNotes(){
-        noteVM.fetchNote()
+        noteVM.fetchNotes()
         noteVM.getNoteStatus.observe(viewLifecycleOwner, androidx.lifecycle.Observer {noteList ->
             if(noteList.isNotEmpty()){
                 userNotes.clear()
-                userNotes2.clear()
 
                 for(note in noteList){
                     userNotes.add(note)
-                    userNotes2.add(note)
                 }
-                Log.d(TAG, " List length in getNotes() = ${userNotes2.size}")
-                noteSearchResults.clear()
-                noteSearchResults.addAll(userNotes)
-                noteAdapter = NoteAdapter(userNotes2, this.context)
+                Log.d(TAG, " List length in getNotes() = ${userNotes.size}")
+                noteAdapter = NoteAdapter(userNotes, this.context)
                 recyclerView.adapter = noteAdapter
-//                recyclerView.adapter = NoteAdapter(userNotes2, this.context)
             }
         })
     }
@@ -242,11 +224,5 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         currentView = GRIDVIEW
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, 1)
         recyclerView.setHasFixedSize(true)
-    }
-
-    private fun searchNote(){
-        sharedVM.queryText.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
-
-        })
     }
 }

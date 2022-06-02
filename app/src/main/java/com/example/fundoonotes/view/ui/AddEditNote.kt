@@ -55,7 +55,7 @@ class AddEditNote() : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        noteVM = ViewModelProvider(requireActivity(), NoteViewModelFactory())[NoteViewModel::class.java]
+        noteVM = ViewModelProvider(requireActivity(), NoteViewModelFactory(requireActivity()))[NoteViewModel::class.java]
         sharedViewModel = ViewModelProvider(requireActivity(), SharedViewModelFactory(UserAuthService()))[SharedViewModel::class.java]
     }
 
@@ -89,7 +89,6 @@ class AddEditNote() : Fragment() {
             etNoteTitle.requestFocus()
             etNoteDesc.setText(desc, TextView.BufferType.EDITABLE)
         }
-
     }
 
     override fun onStart() {

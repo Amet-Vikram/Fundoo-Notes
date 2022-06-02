@@ -11,7 +11,7 @@ private const val TAG = "SharedViewModel"
 
 class SharedViewModel(private val userAuthService: UserAuthService): ViewModel() {
 
-    private val noteService = NoteService()
+    private val noteService = NoteFirebaseManager()
 
     private val _userDetails = MutableLiveData<User>()
     val useDetails: LiveData<User> = _userDetails
@@ -33,7 +33,7 @@ class SharedViewModel(private val userAuthService: UserAuthService): ViewModel()
     }
 
     fun createNote(newNote: Note){
-        noteService.createNote(newNote){
+        noteService.createNoteOnFireStore(newNote){
             _noteStatus.value = it
         }
     }

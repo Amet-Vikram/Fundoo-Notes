@@ -13,13 +13,13 @@ import kotlin.collections.ArrayList
 
 
 private const val TAG = "NoteService"
-class NoteService() {
+class NoteFirebaseManager() {
 
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var userId : String
     private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun createNote(
+    fun createNoteOnFireStore(
         newNote: Note,
         listener: (NoteListener) -> Unit
     ){
@@ -30,6 +30,7 @@ class NoteService() {
 
         docReference.set(newNote).addOnCompleteListener {
             if(it.isSuccessful){
+                //save note into sqlite db as well
                 Log.d(TAG, "User note created for: $noteID")
                 listener(NoteListener(true, "User note created!"))
             }else{
@@ -76,7 +77,7 @@ class NoteService() {
         }
     }
 
-    fun updateNote(editedNote: Note, listener: (NoteListener) -> Unit) {
+    fun updateNoteOnFireStore(editedNote: Note, listener: (NoteListener) -> Unit) {
         userId = auth.currentUser?.uid.toString()
         val noteID = editedNote.id
         val docReference: DocumentReference = db.collection("users").document(userId)
@@ -94,7 +95,7 @@ class NoteService() {
         }
     }
 
-    fun deleteNote(noteID: String, listener: (NoteListener) -> Unit){
+    fun deleteNoteFromFireStore(noteID: String, listener: (NoteListener) -> Unit){
         userId = auth.currentUser?.uid.toString()
         val docReference: DocumentReference = db.collection("users").document(userId)
             .collection("userNotes").document(noteID)

@@ -2,23 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    <item android:id="@+id/search_button"-->
-<!--        app:showAsAction="always"-->
-<!--        android:icon="@drawable/ic_search_note"-->
-<!--        android:title="Search Note"-->
-<!--        app:actionViewClass="androidx.appcompat.widget.SearchView" />-->
-
     <item android:id="@+id/toggleView"
         app:showAsAction="always"
         android:title="Toggle View"
         android:icon="@drawable/ic_grid"/>
 
-<!--    <item android:id="@+id/profile"-->
-<!--        app:showAsAction="never"-->
-<!--        android:title="Account Profile"-->
-<!--        android:icon="@drawable/ic_account_profile"/>-->
-
-
-
-    <!--        app:actionLayout="@layout/profile_menu_layout"-->
 </menu>

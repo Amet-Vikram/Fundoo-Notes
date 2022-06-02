@@ -73,6 +73,7 @@ class NoteDatabaseManager(private var context: Context) {
 
     fun updateOfflineNote(editedNote: Note, listener: (NoteListener) -> Unit){
         val cv = ContentValues()
+        database = dbHelper.writableDatabase
 
         cv.put(dbHelper.COLUMN_ID, editedNote.id)
         cv.put(dbHelper.COLUMN_TITLE, editedNote.title)
@@ -81,14 +82,14 @@ class NoteDatabaseManager(private var context: Context) {
         cv.put(dbHelper.COLUMN_ARCHIVE, editedNote.isArchive)
         cv.put(dbHelper.COLUMN_CREATED, editedNote.created)
 
-        val i = database.updateWithOnConflict(dbHelper.TABLE_NAME, cv, "${dbHelper.COLUMN_ID} = ${editedNote.id}", null, -1)
+        val i = database.update(dbHelper.TABLE_NAME, cv, "${dbHelper.COLUMN_ID} = ?", arrayOf(editedNote.id))
 
         if(i >= 1){
             listener(NoteListener(true, "Note updated!"))
         }else{
-            listener(NoteListener(false, "Couldn't update note."))
+            listener(NoteListener(false, "Couldn't update offline note."))
         }
-        database.close()
+//        database.close()
     }
 
     fun deleteOfflineNote(noteID: String, listener: (NoteListener) -> Unit){
@@ -104,6 +105,6 @@ class NoteDatabaseManager(private var context: Context) {
         }
 
         cursor.close()
-//        database.close()
+        database.close()
     }
 }

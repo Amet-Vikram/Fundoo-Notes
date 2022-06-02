@@ -200,7 +200,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     private fun getNotes(){
         noteVM.fetchNotes()
-        noteVM.getNoteStatus.observe(viewLifecycleOwner, androidx.lifecycle.Observer {noteList ->
+        noteVM.getNoteList.observe(viewLifecycleOwner, androidx.lifecycle.Observer { noteList ->
             if(noteList.isNotEmpty()){
                 userNotes.clear()
 

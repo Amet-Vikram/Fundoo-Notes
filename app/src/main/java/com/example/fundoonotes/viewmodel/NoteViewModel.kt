@@ -14,13 +14,17 @@ class NoteViewModel(context: Context): ViewModel() {
     private val noteService = NoteFirebaseManager()
     private val noteDatabaseManager = NoteDatabaseManager(context)
 
+    init {
+        noteDatabaseManager.open()
+    }
+
     private var networkStatus = true
 
     private val _noteStatus = MutableLiveData<NoteListener>()
     val noteStatus: LiveData<NoteListener> = _noteStatus
 
-    private val _getNoteStatus = MutableLiveData<ArrayList<Note>>()
-    val getNoteStatus: LiveData<ArrayList<Note>> = _getNoteStatus
+    private val _getNoteList = MutableLiveData<ArrayList<Note>>()
+    val getNoteList: LiveData<ArrayList<Note>> = _getNoteList
 
     fun createNote(newNote: Note){
         if(networkStatus){
@@ -28,7 +32,6 @@ class NoteViewModel(context: Context): ViewModel() {
                 _noteStatus.value = it
             }
             //Add note to sqlite as well
-            noteDatabaseManager.open()
             noteDatabaseManager.createOfflineNote(newNote){
                 _noteStatus.value = it
             }
@@ -38,8 +41,15 @@ class NoteViewModel(context: Context): ViewModel() {
     }
 
     fun editNote(editedNote: Note) {
-        noteService.updateNoteOnFireStore(editedNote){
-            _noteStatus.value = it
+        if(networkStatus){
+            noteService.updateNoteOnFireStore(editedNote){
+                _noteStatus.value = it
+            }
+            noteDatabaseManager.updateOfflineNote(editedNote){
+                _noteStatus.value = it
+            }
+        }else{
+            //Update note in sqlite only
         }
     }
 
@@ -59,7 +69,11 @@ class NoteViewModel(context: Context): ViewModel() {
     fun fetchNotes(){
         if(networkStatus){
             noteService.getNoteFromFireStore {
-                _getNoteStatus.value = it
+                _getNoteList.value = it
+            }
+        }else{
+            noteDatabaseManager.fetchAllOfflineNotes {
+                _getNoteList.value = it
             }
         }
     }

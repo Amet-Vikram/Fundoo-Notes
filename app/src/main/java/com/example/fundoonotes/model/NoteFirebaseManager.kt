@@ -90,7 +90,7 @@ class NoteFirebaseManager() {
                 listener(NoteListener(true, "Note updated!"))
             }else{
                 Log.e(TAG,"Failed to update. Note Id: $noteID not found")
-                listener(NoteListener(false, "Couldn't update note."))
+                listener(NoteListener(false, "Couldn't update note on cloud."))
             }
         }
     }

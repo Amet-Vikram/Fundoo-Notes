@@ -2,13 +2,9 @@ package com.example.fundoonotes.model
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.toObject
-import com.google.gson.Gson
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -116,7 +112,8 @@ class NoteFirebaseManager() {
 
         auth.currentUser.let {
             db.collection("users").document(it!!.uid)
-                .collection("userNotes").orderBy("title")
+                .collection("userNotes")
+                .orderBy("title")
                 .get().addOnCompleteListener {
                     if(it.isSuccessful && it.result != null){
                         for(documents in it.result!!){

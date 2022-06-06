@@ -1,5 +1,6 @@
 package com.example.fundoonotes.view.ui
 
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
@@ -22,10 +23,11 @@ import com.example.fundoonotes.viewmodel.NoteViewModelFactory
 import com.example.fundoonotes.viewmodel.SharedViewModel
 import com.example.fundoonotes.viewmodel.SharedViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import java.util.*
 
 class AddEditNote() : Fragment() {
-
 
     private var noteID: String? = null
     private var title: String? = null
@@ -33,6 +35,7 @@ class AddEditNote() : Fragment() {
     private var isUpdating: Boolean = false
 
     private lateinit var btnBack: ImageView
+    private lateinit var btnSetReminder: ImageView
     private lateinit var btnPRed: ImageView
     private lateinit var btnPGreen: ImageView
     private lateinit var btnPBlue: ImageView
@@ -44,7 +47,7 @@ class AddEditNote() : Fragment() {
     private lateinit var sharedViewModel: SharedViewModel
     private lateinit var noteVM: NoteViewModel
     private var priority: Int = 4
-
+    private val setReminderFragment = SetReminder()
 
     constructor(id: String, title: String, desc: String) : this() {
         isUpdating = true // Temporary
@@ -72,6 +75,7 @@ class AddEditNote() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         btnBack = requireView().findViewById(R.id.btnAddNoteToHome)
+        btnSetReminder = requireView().findViewById(R.id.btnSetReminder)
         btnPYellow = requireView().findViewById(R.id.priority_yellow)
         btnPRed = requireView().findViewById(R.id.priority_red)
         btnPGreen = requireView().findViewById(R.id.priority_green)
@@ -141,7 +145,24 @@ class AddEditNote() : Fragment() {
         btnDelNote.setOnClickListener{
             deleteNote()
         }
+
+        btnSetReminder.setOnClickListener{
+//            showTimePicker()
+            setReminderFragment.show(requireActivity().supportFragmentManager, "profileDialog")
+        }
     }
+
+//    private fun showTimePicker() {
+//        timePicker = MaterialTimePicker.Builder()
+//            .setTimeFormat(TimeFormat.CLOCK_12H)
+//            .setHour(12)
+//            .setMinute(0)
+//            .setTitleText("Set Reminder Time")
+//            .build()
+//
+//        timePicker.show(requireActivity().supportFragmentManager, "Set Reminder")
+//
+//    }
 
     private fun createNote() {
         val newNoteID = "${UUID.randomUUID()}"

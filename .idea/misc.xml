@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.182" />
+        <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/drawable/app_icon.xml" value="0.2675" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/drawable/blue_dot.xml" value="0.263" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/drawable/button.xml" value="0.2775" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/drawable/empty_divider.xml" value="0.198" />
@@ -16,6 +17,7 @@
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/drawable/ic_menu.xml" value="0.182" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/drawable/ic_note.xml" value="0.182" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/drawable/ic_note_.xml" value="0.2775" />
+        <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/drawable/ic_notification.xml" value="0.2775" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/drawable/ic_reminder.xml" value="0.182" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/drawable/ic_save_note.xml" value="0.262" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/drawable/ic_search_note.xml" value="0.2775" />
@@ -34,10 +36,11 @@
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/activity_note_home.xml" value="0.25" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/activity_user_login.xml" value="0.33" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/add_note_fragment.xml" value="0.33" />
-        <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/fragment_add_note.xml" value="0.25" />
+        <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/fragment_add_note.xml" value="0.176" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/fragment_archive.xml" value="0.24818840579710144" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/fragment_dialog.xml" value="0.26811594202898553" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/fragment_dialog_profile.xml" value="0.33" />
+        <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/fragment_dialog_reminder.xml" value="0.264" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/fragment_forgot_password.xml" value="0.25885416666666666" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/fragment_login.xml" value="0.25" />
         <entry key="..\:/Adroid Studio Projects/FundooNotes/app/src/main/res/layout/fragment_notes.xml" value="0.33" />

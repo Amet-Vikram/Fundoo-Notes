@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:elevation="4dp"
+    tools:context=".view.ui.MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="350dp"
+        android:layout_height="450dp"
+        android:background="@drawable/profile_background"
+        android:orientation="vertical"
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.497">
+
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="72dp"
+            android:fontFamily="@font/thin"
+            android:gravity="center"
+            android:text="00:00"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnSetTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnSetTime"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="23dp"
+            android:fontFamily="@font/thin"
+            android:gravity="center"
+            android:text="DD M, YYYY"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnSetDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnSetDate" />
+
+        <TextView
+            android:id="@+id/btnSaveAlarm"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:fontFamily="@font/regular"
+            android:gravity="center"
+            android:text="Save"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/textView12"
+            app:layout_constraintTop_toBottomOf="@+id/btnSetDate" />
+
+        <ImageView
+            android:id="@+id/btnBackReminder"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="33dp"
+            android:layout_marginEnd="282dp"
+            android:background="@drawable/back"
+            app:layout_constraintBottom_toTopOf="@+id/textView5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.52" />
+
+        <TextView
+            android:id="@+id/btnSetTime"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/button"
+            android:fontFamily="@font/regular"
+            android:gravity="center"
+            android:text="Set Time"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toTopOf="@+id/btnSetDate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+        <TextView
+            android:id="@+id/btnSetDate"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/button"
+            android:fontFamily="@font/regular"
+            android:gravity="center"
+            android:text="Set Date"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toTopOf="@+id/btnSaveAlarm"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSetTime" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bold"
+            android:text="Set Reminder"
+            android:textSize="28sp"
+            app:layout_constraintBottom_toTopOf="@+id/btnSetTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnBackReminder" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:text="Cancel Alarm"
+            android:textColor="#CC4646"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnSaveAlarm"
+            app:layout_constraintEnd_toStartOf="@+id/btnSaveAlarm"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnSaveAlarm"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

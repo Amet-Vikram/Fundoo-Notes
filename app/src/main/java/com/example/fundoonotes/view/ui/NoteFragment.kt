@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -30,7 +31,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlin.collections.ArrayList
+import java.io.IOException
+
 
 private const val TAG = "NoteFragment"
 class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
@@ -61,7 +63,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        noteVM = ViewModelProvider(requireActivity(), NoteViewModelFactory(this.requireContext()))[NoteViewModel::class.java]
+        noteVM = ViewModelProvider(requireActivity(), NoteViewModelFactory(requireActivity()))[NoteViewModel::class.java]
         sharedVM = ViewModelProvider(this, SharedViewModelFactory(UserAuthService()))[SharedViewModel::class.java]
         //Toolbar Options  toggle feature
         setHasOptionsMenu(true)
@@ -107,11 +109,21 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                 addToBackStack(null)
                 commit()
             }
+            if(isConnected()){
+                Toast.makeText(this.context, "Internet Available", Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(this.context, "Internet Unvailable", Toast.LENGTH_SHORT).show()
+            }
         }
 
         //Recycler View Attributes
         listView()
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        noteVM.closeDB()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -200,7 +212,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     private fun getNotes(){
         noteVM.fetchNotes()
-        noteVM.getNoteList.observe(viewLifecycleOwner, androidx.lifecycle.Observer { noteList ->
+        noteVM.noteList.observe(viewLifecycleOwner, androidx.lifecycle.Observer { noteList ->
             if(noteList.isNotEmpty()){
                 userNotes.clear()
 
@@ -224,5 +236,11 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         currentView = GRIDVIEW
         recyclerView.layoutManager = StaggeredGridLayoutManager(2, 1)
         recyclerView.setHasFixedSize(true)
+    }
+
+    @Throws(InterruptedException::class, IOException::class)
+    fun isConnected(): Boolean {
+        val command = "ping -c 1 google.com"
+        return Runtime.getRuntime().exec(command).waitFor() == 0
     }
 }

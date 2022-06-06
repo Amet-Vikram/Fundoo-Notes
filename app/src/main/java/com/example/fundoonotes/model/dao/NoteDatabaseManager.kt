@@ -1,22 +1,29 @@
-package com.example.fundoonotes.model
+package com.example.fundoonotes.model.dao
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import com.example.fundoonotes.model.DatabaseHelper
+import com.example.fundoonotes.model.Note
+import com.example.fundoonotes.model.NoteListener
 
 private const val TAG = "NoteDatabaseManager"
-class NoteDatabaseManager(private var context: Context) {
+class NoteDatabaseManager(private var context: Context){
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var database: SQLiteDatabase
 
     fun open(): NoteDatabaseManager {
         dbHelper = DatabaseHelper(context)
+        database = dbHelper.readableDatabase
         return this
     }
 
     fun close(){
+        if(database.isOpen){
+            database.close()
+        }
         dbHelper.close()
     }
 
@@ -40,7 +47,6 @@ class NoteDatabaseManager(private var context: Context) {
             Log.d(TAG, "Couldn't Store: $insert")
             listener(NoteListener(false, "Couldn't create note"))
         }
-//        database.close()
     }
 
     fun fetchAllOfflineNotes(listener: (ArrayList<Note>) -> Unit){
@@ -68,7 +74,6 @@ class NoteDatabaseManager(private var context: Context) {
         }
         listener(result)
         cursor.close()
-        database.close()
     }
 
     fun updateOfflineNote(editedNote: Note, listener: (NoteListener) -> Unit){
@@ -89,7 +94,6 @@ class NoteDatabaseManager(private var context: Context) {
         }else{
             listener(NoteListener(false, "Couldn't update offline note."))
         }
-//        database.close()
     }
 
     fun deleteOfflineNote(noteID: String, listener: (NoteListener) -> Unit){
@@ -105,6 +109,5 @@ class NoteDatabaseManager(private var context: Context) {
         }
 
         cursor.close()
-        database.close()
     }
 }

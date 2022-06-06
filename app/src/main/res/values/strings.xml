@@ -2,6 +2,7 @@
     <string name="app_name">FundooNotes</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="fundoo_notes">Fundoo Notes</string>
+    <string name="reminder_channel_id">fundooReminder</string>
 
     //Navigation drawer
     <string name="navigation_drawer_open">Open navigation drawer</string>

@@ -15,7 +15,7 @@ import com.google.firebase.ktx.Firebase
 
 private const val TAG = "MainActivity"
 
-//add this for nav drawer --> , NavigationView.OnNavigationItemSelectedListener
+
 class MainActivity : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
     private var backPressedTime : Long = 0

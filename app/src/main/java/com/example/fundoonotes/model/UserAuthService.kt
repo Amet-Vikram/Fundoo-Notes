@@ -4,6 +4,10 @@ package com.example.fundoonotes.model
 import android.util.Log
 
 import com.example.fundoonotes.R
+import com.example.fundoonotes.api.Constant
+import com.example.fundoonotes.api.LoginListener
+import com.example.fundoonotes.api.LoginLoader
+import com.example.fundoonotes.api.LoginResponse
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -90,6 +94,26 @@ class UserAuthService() {
                 listener(AuthListener(false, "User login failed."))
             }
         }
+    }
 
+    fun loginWithRESTAPI(email: String, password: String, listener: (AuthListener) -> Unit){
+        val loginLoader = LoginLoader()
+        Log.d(TAG, "API Function Called!")
+
+        loginLoader.getLoginCompleted(object: LoginListener{
+            override fun getLoginDone(response: LoginResponse?, status: Boolean, message: String) {
+                Log.d(TAG, "Inside get Login Lmao!")
+                if(!status){
+                    if (response != null) {
+                        Log.d(TAG, "Passed Lmao!")
+                        Constant.getInstance()?.setUserID(response.localId)
+                        listener(AuthListener(true, "Login Successful with rest api "))
+                    }else{
+                        listener(AuthListener(false, "Login Failed "))
+                        Log.d(TAG, "Failed Lmao!")
+                    }
+                }
+            }
+        }, email, password)
     }
 }

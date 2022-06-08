@@ -39,7 +39,6 @@ class SharedViewModel(private val userAuthService: UserAuthService): ViewModel()
     }
 
     fun setQueryText(query: String){
-
         _queryText.value = query
     }
 }

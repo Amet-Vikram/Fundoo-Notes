@@ -9,9 +9,11 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.fundoonotes.R
+import com.example.fundoonotes.model.Note
+
 private const val TAG = "AlarmReceiver"
 class AlarmReceiver(): BroadcastReceiver() {
-
+//private val note: Note
     override fun onReceive(context: Context, intent: Intent?) {
         Log.d(TAG, "Alarm Received!")
         val reminderNotification = NotificationCompat.Builder(context, "fundooReminder")

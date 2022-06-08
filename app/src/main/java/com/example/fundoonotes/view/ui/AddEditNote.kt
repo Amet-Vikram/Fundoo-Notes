@@ -147,22 +147,9 @@ class AddEditNote() : Fragment() {
         }
 
         btnSetReminder.setOnClickListener{
-//            showTimePicker()
             setReminderFragment.show(requireActivity().supportFragmentManager, "profileDialog")
         }
     }
-
-//    private fun showTimePicker() {
-//        timePicker = MaterialTimePicker.Builder()
-//            .setTimeFormat(TimeFormat.CLOCK_12H)
-//            .setHour(12)
-//            .setMinute(0)
-//            .setTitleText("Set Reminder Time")
-//            .build()
-//
-//        timePicker.show(requireActivity().supportFragmentManager, "Set Reminder")
-//
-//    }
 
     private fun createNote() {
         val newNoteID = "${UUID.randomUUID()}"

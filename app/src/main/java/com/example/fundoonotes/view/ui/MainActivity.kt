@@ -19,18 +19,12 @@ private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(){
     private lateinit var auth: FirebaseAuth
     private var backPressedTime : Long = 0
-    private lateinit var sharedVM: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         auth = Firebase.auth
-
-        //Fragment Injection
-        observeAppNav()
-
-        sharedVM = ViewModelProvider(this, SharedViewModelFactory(UserAuthService()))[SharedViewModel::class.java]
     }
 
     private fun observeAppNav() {
@@ -55,7 +49,6 @@ class MainActivity : AppCompatActivity(){
         super.onResume()
 
         observeAppNav()
-
     }
 
     override fun onBackPressed(){
@@ -73,5 +66,4 @@ class MainActivity : AppCompatActivity(){
         }
         backPressedTime = System.currentTimeMillis()
     }
-
 }

@@ -3,17 +3,21 @@ package com.example.fundoonotes.model
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import kotlin.collections.ArrayList
 
 
-private const val TAG = "NoteService"
+private const val TAG = "NoteFirebaseManager"
 class NoteFirebaseManager() {
 
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var userId : String
     private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var lastResult: DocumentSnapshot? = null
+    private val userNotes = ArrayList<Note>()
 
     fun createNoteOnFireStore(
         newNote: Note,
@@ -93,10 +97,10 @@ class NoteFirebaseManager() {
 
     fun deleteNoteFromFireStore(noteID: String, listener: (NoteListener) -> Unit){
         userId = auth.currentUser?.uid.toString()
-        val docReference: DocumentReference = db.collection("users").document(userId)
+        val userNoteReference: DocumentReference = db.collection("users").document(userId)
             .collection("userNotes").document(noteID)
 
-        docReference.delete().addOnCompleteListener {
+        userNoteReference.delete().addOnCompleteListener {
             if(it.isSuccessful){
                 listener(NoteListener(true, "Note Deleted!"))
             }else{
@@ -106,26 +110,39 @@ class NoteFirebaseManager() {
     }
 
     fun getNoteFromFireStore(listener: (ArrayList<Note>) -> Unit){
-        val userNotes = ArrayList<Note>()
+        val fetchedNotes = ArrayList<Note>()
         var note: Note
-//        userId = auth.currentUser?.uid.toString()
+        val query: Query
+
+        userId = auth.currentUser?.uid.toString()
+        val allUserNoteReference = db.collection("users").document(userId)
+            .collection("userNotes")
+
+        if(lastResult == null){
+            query = allUserNoteReference.orderBy("title").limit(10)
+        }else{
+            query = allUserNoteReference.orderBy("title")
+                .startAfter(lastResult!!.data?.get("title"))
+                .limit(10)
+        }
 
         auth.currentUser.let {
-            db.collection("users").document(it!!.uid)
-                .collection("userNotes")
-                .orderBy("title")
-                .get().addOnCompleteListener {
-                    if(it.isSuccessful && it.result != null){
-                        for(documents in it.result!!){
-                            note = documents.toObject<Note>()
-                            userNotes.add(note)
-                        }
-                        listener(userNotes)
-                    }else{
-                        listener(ArrayList<Note>())
-                        Log.d(TAG, "No notes Found")
+            query.get()
+                .addOnCompleteListener {
+                if(it.isSuccessful && it.result != null){
+                    for(documents in it.result!!){
+                        note = documents.toObject<Note>()
+                        fetchedNotes.add(note)
                     }
+                    Log.d(TAG, "${fetchedNotes.size} notes fetched from Firebase")
+                }else{
+                    Log.d(TAG, "No notes Found")
                 }
+                userNotes.addAll(fetchedNotes)
+                Log.d(TAG, "${userNotes.size} notes in User Notes")
+                lastResult = it.result.documents[it.result.size() - 1]
+                listener(userNotes)
+            }
         }
     }
 }

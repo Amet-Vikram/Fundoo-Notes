@@ -32,6 +32,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.IOException
+import kotlin.math.max
 
 
 private const val TAG = "NoteFragment"
@@ -55,10 +56,12 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     private lateinit var userId : String
     //RecyclerView
     private lateinit var noteAdapter: NoteAdapter
+    private var fetchedNotes =  ArrayList<Note>()
     private var userNotes =  ArrayList<Note>()
     private val LISTVIEW = "LIST_VIEW"
     private val GRIDVIEW = "GRID_VIEW"
     private lateinit var currentView: String
+    private var isLoadingNewNotes = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,13 +115,47 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             if(isConnected()){
                 Toast.makeText(this.context, "Internet Available", Toast.LENGTH_SHORT).show()
             }else{
-                Toast.makeText(this.context, "Internet Unvailable", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this.context, "Internet Unavailable", Toast.LENGTH_SHORT).show()
             }
         }
 
         //Recycler View Attributes
         listView()
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
 
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                when(currentView){
+                    LISTVIEW -> {
+                        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                        val totalItem = layoutManager.itemCount
+                        val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPosition()
+                        if(totalItem < lastVisibleItem + 2){
+                            if(!isLoadingNewNotes){
+                                isLoadingNewNotes = true
+                                getNotes()
+                                Log.d(TAG, " scrolled till last. User notes size = ${fetchedNotes.size}")
+                            }
+                        }
+                    }
+                    GRIDVIEW -> {
+                        val layoutManager = recyclerView.layoutManager as StaggeredGridLayoutManager
+                        val totalItem = layoutManager.itemCount
+                        val lastPositions = IntArray(layoutManager.spanCount)
+                        val lastVisibleItem = layoutManager.findLastCompletelyVisibleItemPositions(lastPositions)
+                        val lastItem = max(lastVisibleItem[0], lastVisibleItem[1])
+                        if(totalItem < lastItem + 2){
+                            if(!isLoadingNewNotes){
+                                isLoadingNewNotes = true
+                                getNotes()
+                                Log.d(TAG, " scrolled till last. User notes size = ${fetchedNotes.size}")
+                            }
+                        }
+                    }
+                }
+            }
+        })
     }
 
     override fun onDestroy() {
@@ -214,15 +251,15 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         noteVM.fetchNotes()
         noteVM.noteList.observe(viewLifecycleOwner, androidx.lifecycle.Observer { noteList ->
             if(noteList.isNotEmpty()){
-                userNotes.clear()
-
+                fetchedNotes.clear()
                 for(note in noteList){
-                    userNotes.add(note)
+                    fetchedNotes.add(note)
                 }
-                Log.d(TAG, " List length in getNotes() = ${userNotes.size}")
-                noteAdapter = NoteAdapter(userNotes, this.context)
-                recyclerView.adapter = noteAdapter
             }
+//            userNotes.addAll(fetchedNotes)
+//            Log.d(TAG, " User Note List length in getNotes() = ${fetchedNotes.size}")
+            noteAdapter = NoteAdapter(fetchedNotes, this.context)
+            recyclerView.adapter = noteAdapter
         })
     }
 

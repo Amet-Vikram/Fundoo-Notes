@@ -18,7 +18,7 @@ class DatabaseHelper(context: Context?) : SQLiteOpenHelper(context, "notes.db", 
     val COLUMN_ID = "ID"
 
     override fun onCreate(db: SQLiteDatabase?) {
-        val createTableStatement = "CREATE TABLE $TABLE_NAME ($COLUMN_ID STRING(100) PRIMARY KEY, $COLUMN_TITLE STRING, $COLUMN_DESC STRING, $COLUMN_PRIORITY INT, $COLUMN_ARCHIVE BOOL, $COLUMN_CREATED STRING)"
+        val createTableStatement = "CREATE TABLE $TABLE_NAME ($COLUMN_ID STRING(100) PRIMARY KEY, $COLUMN_TITLE STRING, $COLUMN_DESC STRING, $COLUMN_PRIORITY INT, $COLUMN_ARCHIVE INT, $COLUMN_CREATED STRING)"
 
         db?.execSQL(createTableStatement)
     }

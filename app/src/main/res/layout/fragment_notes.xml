@@ -60,7 +60,6 @@
                 android:layout_height="match_parent"
                 android:backgroundTint="@color/light_teal" />
 
-
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -103,10 +103,11 @@ class UserAuthService() {
         loginLoader.getLoginCompleted(object: LoginListener{
             override fun getLoginDone(response: LoginResponse?, status: Boolean, message: String) {
                 Log.d(TAG, "Inside get Login Lmao!")
-                if(!status){
+                if(status){
                     if (response != null) {
-                        Log.d(TAG, "Passed Lmao!")
+//                        Log.d(TAG, "Passed Lmao!")
                         Constant.getInstance()?.setUserID(response.localId)
+                        Log.d(TAG, "Local ID = ${response.localId}")
                         listener(AuthListener(true, "Login Successful with rest api "))
                     }else{
                         listener(AuthListener(false, "Login Failed "))

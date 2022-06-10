@@ -21,8 +21,6 @@ class LoginViewModel(val userAuthService: UserAuthService): ViewModel() {
         }
     }
 
-
-
     fun userGLogin(idToken: String){
 
         userAuthService.firebaseAuthWithGoogle(idToken){
@@ -32,4 +30,15 @@ class LoginViewModel(val userAuthService: UserAuthService): ViewModel() {
             }
         }
     }
+
+    fun userLoginRESTAPI(email: String, password: String){
+
+        userAuthService.loginWithRESTAPI(email, password){
+            //This is Callback
+            if(it.status){
+                _loginStatus.value = it
+            }
+        }
+    }
+
 }

@@ -35,7 +35,7 @@ class NoteDatabaseManager(private var context: Context){
         cv.put(dbHelper.COLUMN_TITLE, note.title)
         cv.put(dbHelper.COLUMN_DESC, note.desc)
         cv.put(dbHelper.COLUMN_PRIORITY, note.priority)
-        cv.put(dbHelper.COLUMN_ARCHIVE, note.isArchive)
+        cv.put(dbHelper.COLUMN_ARCHIVE, note.archive)
         cv.put(dbHelper.COLUMN_CREATED, note.created)
 
         val insert = database.insert(dbHelper.TABLE_NAME, null, cv)
@@ -63,7 +63,7 @@ class NoteDatabaseManager(private var context: Context){
                 val title = cursor.getString(1)
                 val desc = cursor.getString(2)
                 val priority = cursor.getInt(3)
-                val archived = cursor.getInt(4) == 1
+                val archived = cursor.getInt(4)
                 val created = cursor.getString(5)
 
                 val noteEntry = Note(id, title, desc, priority, archived, created)
@@ -84,7 +84,7 @@ class NoteDatabaseManager(private var context: Context){
         cv.put(dbHelper.COLUMN_TITLE, editedNote.title)
         cv.put(dbHelper.COLUMN_DESC, editedNote.desc)
         cv.put(dbHelper.COLUMN_PRIORITY, editedNote.priority)
-        cv.put(dbHelper.COLUMN_ARCHIVE, editedNote.isArchive)
+        cv.put(dbHelper.COLUMN_ARCHIVE, editedNote.archive)
         cv.put(dbHelper.COLUMN_CREATED, editedNote.created)
 
         val i = database.update(dbHelper.TABLE_NAME, cv, "${dbHelper.COLUMN_ID} = ?", arrayOf(editedNote.id))

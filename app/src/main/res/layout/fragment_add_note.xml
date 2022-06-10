@@ -21,14 +21,24 @@
             android:layout_margin="5dp">
 
             <ImageView
-                android:id="@+id/btnAddNoteToHome"
+                android:id="@+id/btnBackFromAddNote"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:background="@drawable/back"
                 android:layout_gravity="end"
+                android:background="@drawable/back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/btnArchiveNote"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="35dp"
+                android:background="@drawable/ic_archive"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnSetReminder"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <ImageView
                 android:id="@+id/btnSetReminder"
@@ -37,8 +47,8 @@
                 android:layout_gravity="end"
                 android:background="@drawable/ic_notification"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

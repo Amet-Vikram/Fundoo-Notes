@@ -140,7 +140,9 @@ class NoteFirebaseManager() {
                 }
                 userNotes.addAll(fetchedNotes)
                 Log.d(TAG, "${userNotes.size} notes in User Notes")
-                lastResult = it.result.documents[it.result.size() - 1]
+                if(!it.result.isEmpty){
+                    lastResult = it.result.documents[it.result.size() - 1]
+                }
                 listener(userNotes)
             }
         }
@@ -151,12 +153,12 @@ data class Note(
     val id: String,
     val title: String = "title",
     val desc: String,
-    val priority: Int = 3,
-    val isArchive: Boolean = false,
+    val priority: Int = 4,
+    val archive: Int,
     val created : String
 ){
     //to deserialize using Fire Store requires no-arg constructor.
-    constructor() : this("", "", "", -1, false, "")
+    constructor() : this("", "", "", -1,-1,"")
 }
 
 data class NoteListener(val status: Boolean, val message: String)

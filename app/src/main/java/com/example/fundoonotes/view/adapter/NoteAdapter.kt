@@ -1,5 +1,6 @@
 package com.example.fundoonotes.view.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.fundoonotes.R
 import com.example.fundoonotes.model.Note
@@ -22,12 +24,9 @@ private const val TAG = "NoteAdapter"
 class NoteAdapter(private var noteList: ArrayList<Note>, private val context: Context?) :
     RecyclerView.Adapter<NoteAdapter.NoteViewHolder>(), Filterable {
 
-    private var noteListAll = ArrayList<Note>()
-    private var list = ArrayList<Note>()
     var filteredList = ArrayList<Note>()
 
     init {
-//        noteListAll = this.noteList
         filteredList = this.noteList
     }
 
@@ -39,27 +38,39 @@ class NoteAdapter(private var noteList: ArrayList<Note>, private val context: Co
         return NoteViewHolder(itemView)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val currentItem = filteredList[position]
 
-        holder.noteTitle.text = currentItem.title
-        holder.noteBody.text = currentItem.desc
-        holder.noteCreated.text = currentItem.created
+        Log.d(TAG, "${currentItem.title} is Archived ${currentItem.archive}")
 
-        holder.itemView.setOnClickListener {
-            activity = context as AppCompatActivity
-            Toast.makeText(context, "Note title: ${currentItem.title}", Toast.LENGTH_SHORT).show()
-            activity.supportFragmentManager.beginTransaction()
-                .replace(R.id.flFragment, AddEditNote(currentItem.id, currentItem.title, currentItem.desc))
-                .addToBackStack(null)
-                .commit()
-        }
+        if(currentItem.archive == 1){
+            Log.d(TAG, "Current Item is Archived")
+            holder.itemView.isVisible = false
+            holder.itemView.layoutParams = RecyclerView.LayoutParams(0,0)
+//            View.VISIBLE
+        }else{
+            holder.itemView.isVisible = true
+//            Log.d(TAG, "Current Item is not Archived")
+            holder.noteTitle.text = currentItem.title
+            holder.noteBody.text = currentItem.desc
+            holder.noteCreated.text = currentItem.created
 
-        when(currentItem.priority){
-            1 -> holder.itemView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.red_dot) }
-            2 -> holder.itemView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.yellow_dot) }
-            3 -> holder.itemView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.green_dot) }
-            4 -> holder.itemView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.blue_dot) }
+            holder.itemView.setOnClickListener {
+                activity = context as AppCompatActivity
+                Toast.makeText(context, "Note title: ${currentItem.title}", Toast.LENGTH_SHORT).show()
+                activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.flFragment, AddEditNote(currentItem.id, currentItem.title, currentItem.desc))
+                    .addToBackStack(null)
+                    .commit()
+            }
+
+            when(currentItem.priority){
+                1 -> holder.itemView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.red_dot) }
+                2 -> holder.itemView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.yellow_dot) }
+                3 -> holder.itemView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.green_dot) }
+                4 -> holder.itemView.background = context?.let { ContextCompat.getDrawable(it, R.drawable.blue_dot) }
+            }
         }
     }
 
@@ -68,7 +79,7 @@ class NoteAdapter(private var noteList: ArrayList<Note>, private val context: Co
     }
 
     class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        val notePriority: ImageView = itemView.findViewById(R.id.item_priority)
+
         val noteTitle: TextView = itemView.findViewById(R.id.item_title)
         val noteBody: TextView = itemView.findViewById(R.id.item_desc)
         val noteCreated: TextView = itemView.findViewById(R.id.item_date)
@@ -103,8 +114,6 @@ class NoteAdapter(private var noteList: ArrayList<Note>, private val context: Co
 
             //UI Thread
             override fun publishResults(p0: CharSequence?, filterResults: FilterResults?) {
-//                filteredList.clear()
-//                filteredList.addAll(filterResults?.values as Collection<Note>)
                 filteredList= filterResults?.values as ArrayList<Note>
                 notifyDataSetChanged()
             }

@@ -41,14 +41,14 @@ class Login : Fragment(R.layout.fragment_login) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        //UI elements
         etLoginEmail = requireView().findViewById(R.id.etForgotEmail)
         etLoginPassword = requireView().findViewById(R.id.etLoginPassword)
         btnLogin = requireView().findViewById(R.id.btnLogin)
         tvRegister = requireView().findViewById(R.id.tvRegister)
         tvForgotPass = requireView().findViewById(R.id.tvForgotPassword)
         btnGSignIn = requireView().findViewById(R.id.btnGSignIn)
-
+        //View Model
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(UserAuthService()))[LoginViewModel::class.java]
     }
 
@@ -129,6 +129,10 @@ class Login : Fragment(R.layout.fragment_login) {
                     Toast.makeText(this.context, it.message, Toast.LENGTH_SHORT).show()
                     startActivity(intentNoteHome)
                     requireActivity().finish()
+//                    requireActivity().supportFragmentManager.beginTransaction().apply {
+//                        replace(R.id.flFragment, NoteFragment())
+//                        commit()
+//                    }
                 }else{
                     Toast.makeText(this.context, it.message , Toast.LENGTH_SHORT).show()
                 }

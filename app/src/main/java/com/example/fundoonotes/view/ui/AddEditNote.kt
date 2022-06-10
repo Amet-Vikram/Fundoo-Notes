@@ -1,6 +1,5 @@
 package com.example.fundoonotes.view.ui
 
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
@@ -23,8 +22,6 @@ import com.example.fundoonotes.viewmodel.NoteViewModelFactory
 import com.example.fundoonotes.viewmodel.SharedViewModel
 import com.example.fundoonotes.viewmodel.SharedViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import java.util.*
 
 class AddEditNote() : Fragment() {
@@ -36,6 +33,7 @@ class AddEditNote() : Fragment() {
 
     private lateinit var btnBack: ImageView
     private lateinit var btnSetReminder: ImageView
+    private lateinit var btnArchiveNote: ImageView
     private lateinit var btnPRed: ImageView
     private lateinit var btnPGreen: ImageView
     private lateinit var btnPBlue: ImageView
@@ -74,8 +72,9 @@ class AddEditNote() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnBack = requireView().findViewById(R.id.btnAddNoteToHome)
+        btnBack = requireView().findViewById(R.id.btnBackFromAddNote)
         btnSetReminder = requireView().findViewById(R.id.btnSetReminder)
+        btnArchiveNote = requireView().findViewById(R.id.btnArchiveNote)
         btnPYellow = requireView().findViewById(R.id.priority_yellow)
         btnPRed = requireView().findViewById(R.id.priority_red)
         btnPGreen = requireView().findViewById(R.id.priority_green)
@@ -86,8 +85,12 @@ class AddEditNote() : Fragment() {
         etNoteDesc = requireView().findViewById(R.id.etNoteDesc)
 
         btnDelNote.visibility = View.GONE
+        btnArchiveNote.visibility = View.GONE
+        btnSetReminder.visibility = View.GONE
 
         if(isUpdating){
+            btnArchiveNote.visibility = View.VISIBLE
+            btnSetReminder.visibility = View.VISIBLE
             btnDelNote.visibility = View.VISIBLE
             etNoteTitle.setText(title, TextView.BufferType.EDITABLE)
             etNoteTitle.requestFocus()
@@ -136,7 +139,7 @@ class AddEditNote() : Fragment() {
 
         btnSaveNote.setOnClickListener{
             if(isUpdating){
-                editNote()
+                editNote(0)
             }else{
                 createNote()
             }
@@ -149,6 +152,10 @@ class AddEditNote() : Fragment() {
         btnSetReminder.setOnClickListener{
             setReminderFragment.show(requireActivity().supportFragmentManager, "profileDialog")
         }
+
+        btnArchiveNote.setOnClickListener{
+            editNote(1)
+        }
     }
 
     private fun createNote() {
@@ -160,7 +167,7 @@ class AddEditNote() : Fragment() {
         val time: String = DateFormat.format("dd-MM-yyyy", currentDate.time).toString()
 
         val newNote = Note(
-            newNoteID, noteTitle, note, priority, created = time
+            newNoteID, noteTitle, note, priority, created = time, archive = 0
         )
 
         if(TextUtils.isEmpty(note)){
@@ -172,7 +179,7 @@ class AddEditNote() : Fragment() {
         }
     }
 
-    private fun editNote() {
+    private fun editNote(isArchived: Int) {
         val editedNoteID = noteID!!
         val editedNoteTitle = etNoteTitle.text.toString()
         val editedNoteDesc = etNoteDesc.text.toString()
@@ -180,7 +187,7 @@ class AddEditNote() : Fragment() {
         val time: String = DateFormat.format("dd-MM-yyyy", currentDate.time).toString()
 
         val editedNote = Note(
-            editedNoteID, editedNoteTitle, editedNoteDesc, priority, created = time
+            editedNoteID, editedNoteTitle, editedNoteDesc, priority, created = time, archive = isArchived
         )
         if(TextUtils.isEmpty(editedNoteDesc)){
             etNoteDesc.error = "Note can't be empty"

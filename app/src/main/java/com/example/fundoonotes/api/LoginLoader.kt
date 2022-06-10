@@ -15,7 +15,8 @@ class LoginLoader {
 
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if(response.isSuccessful){
-                    Log.d(TAG, "Got Response!")
+                    response.body()?.registered
+                    Log.d(TAG, "Got Response! Response = ${response.body()?.registered}")
                     listener.getLoginDone(response.body(), true, "User Logged Rest Api")
                 }
             }

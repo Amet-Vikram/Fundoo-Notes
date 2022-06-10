@@ -75,7 +75,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         //Set toolbar
         val view: View = inflater.inflate(R.layout.fragment_notes, container, false)
-
+        Log.d(TAG, "OnCreate View Triggered")
         btnAddNote = view.findViewById(R.id.btnAddNote)
         toolbar = view.findViewById(R.id.toolbar)
         drawer = view.findViewById(R.id.drawer_layout)
@@ -96,6 +96,7 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     override fun onStart() {
         super.onStart()
 
+        Log.d(TAG, "On Resume Triggered")
         val toggle = ActionBarDrawerToggle(requireActivity(), drawer, toolbar,
             R.string.navigation_drawer_open,
             R.string.navigation_drawer_close
@@ -111,11 +112,6 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                 replace(R.id.flFragment, AddEditNote())
                 addToBackStack(null)
                 commit()
-            }
-            if(isConnected()){
-                Toast.makeText(this.context, "Internet Available", Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(this.context, "Internet Unavailable", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -156,6 +152,13 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                 }
             }
         })
+//        getNotes()
+    }
+
+    override fun onResume() {
+        super.onResume()
+//        getNotes()
+        Log.d(TAG, "On Resume Triggered")
     }
 
     override fun onDestroy() {
@@ -256,7 +259,6 @@ class NoteFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                     fetchedNotes.add(note)
                 }
             }
-//            userNotes.addAll(fetchedNotes)
 //            Log.d(TAG, " User Note List length in getNotes() = ${fetchedNotes.size}")
             noteAdapter = NoteAdapter(fetchedNotes, this.context)
             recyclerView.adapter = noteAdapter

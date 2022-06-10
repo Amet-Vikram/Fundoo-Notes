@@ -1,6 +1,7 @@
 package com.example.fundoonotes.view.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -28,8 +29,10 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun observeAppNav() {
+
         val currentUser = auth.currentUser
-        if(currentUser == null){
+        Log.d(TAG, "${auth.currentUser?.uid}")
+        if(currentUser == null ){
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.flFragment, Login())
 //                addToBackStack(null)
@@ -38,7 +41,6 @@ class MainActivity : AppCompatActivity(){
         }else{
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.flFragment, NoteFragment())
-//                addToBackStack(null)
                 commit()
             }
         }
@@ -53,9 +55,6 @@ class MainActivity : AppCompatActivity(){
 
     override fun onBackPressed(){
         when {
-//            supportFragmentManager.backStackEntryCount > 0 -> {
-//                supportFragmentManager.popBackStackImmediate()
-//            }
             backPressedTime + 2000 > System.currentTimeMillis() -> {
                 super.onBackPressed()
                 return
